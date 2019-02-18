@@ -9,7 +9,7 @@ Before running the application class as a Java Application execute the instructi
 
 ##Development kit
 
-Please note the following versions were used in developing a running version of gp: gp2.4 to be precise:
+Please note the following versions were used in developing a running version of gp: gp2.4 and higher:
 - java version "11.0.2" 2019-01-15 LTS
 - npm 6.8.0
 - bower 1.8.8
