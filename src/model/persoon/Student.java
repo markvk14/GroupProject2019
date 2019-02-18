@@ -16,8 +16,8 @@ public class Student extends Persoon {
 	@Override
 	public boolean equals(Object obj) {
 		if (super.equals(obj) && obj instanceof Student) {
-				Student s = (Student) obj;
-				return this.studentNummer == s.studentNummer;
+			Student s = (Student) obj;
+			return this.studentNummer == s.studentNummer;
 		} else {
 			return false;
 		}
@@ -34,9 +34,5 @@ public class Student extends Persoon {
 	public int getStudentNummer() {
 		return this.studentNummer;
 	}
-
-	/*private void setStudentNummer(int pStudentNummer) {
-		this.studentNummer = pStudentNummer;
-	}*/
 
 }
