@@ -195,6 +195,7 @@ public class PrIS {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			//close the bufferedReader if opened.
 			if (br != null) {
 				try {
 					br.close();
@@ -202,25 +203,26 @@ public class PrIS {
 					e.printStackTrace();
 				}
 			}
+			//verify content of arraylist, if empty add Jos
+			if (pDocenten.isEmpty()) pDocenten.add(new Docent("Jos", "van", "Reenen", "supergeheim", "jos.vanreenen@hu.nl", 1));
+			
 		}
 	}
 
 	private void vulKlassen(ArrayList<Klas> pKlassen) {
 		//TICT-SIE-VIA is de klascode die ook in de rooster file voorkomt
 		//V1A is de naam van de klas die ook als file naam voor de studenten van die klas wordt gebruikt
-		//Klas k1 = new Klas("TICT-SIE-V1A", "V1A");
+		Klas k1 = new Klas("TICT-SIE-V1A", "V1A");
 		Klas k2 = new Klas("TICT-SIE-V1B", "V1B");
 		Klas k3 = new Klas("TICT-SIE-V1C", "V1C");
 		Klas k4 = new Klas("TICT-SIE-V1D", "V1D");
 		Klas k5 = new Klas("TICT-SIE-V1E", "V1E");
-		Klas k6 = new Klas("TICT-SIE-V1F", "V1F");
 		
-		//pKlassen.add(k1);
+		pKlassen.add(k1);
 		pKlassen.add(k2);
 		pKlassen.add(k3);
 		pKlassen.add(k4);
 		pKlassen.add(k5);
-		pKlassen.add(k6);
 	}	
 	private void vulStudenten(
 			ArrayList<Student> pStudenten,
