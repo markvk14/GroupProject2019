@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="my-logout">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      span {
+        @apply --paper-font-body1;
+      }
+    </style>
+
+    <paper-button raised on-click="_logout_clicked">Klik hier als je zeker weet dat je echt wilt uitloggen</paper-button>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      /* _xxxx private              : geen external data binding      - geen notify
+         _c_xx private constant     : geen external binding, constant - geen notify
+         c_xx  public constant      : one way external databinding [[c_xx]] - geen notify nodig
+         xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+      */
+      Polymer({
+        is: 'my-logout',
+
+        properties: {
+          rol: {
+            type: String,
+            value: "undefined",
+            notify: true,
+          },
+        },
+
+        _logout_clicked: function() {
+          console.log("_logout_clicked");
+          this.rol = "undefined";
+          this._go_home();
+         },
+        
+        _go_home: function() {
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+         },
+      });
+    })();
+  </script>
+</dom-module>
