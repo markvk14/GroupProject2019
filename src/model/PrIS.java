@@ -228,7 +228,9 @@ public class PrIS {
 			ArrayList<Student> pStudenten,
 			ArrayList<Klas> pKlassen) {
 		Student lStudent;
-		for (Klas k : pKlassen) {			
+		Student dummyStudent = new Student("Stu", "de", "nt", "geheim", "test@student.hu.nl", 0);
+		for (Klas k : pKlassen) {	
+			//per klas
 			String csvFile = "././CSV/" + k.getNaam() + ".csv";
 			BufferedReader br = null;
 			String line = "";
@@ -267,9 +269,16 @@ public class PrIS {
 						e.printStackTrace();
 					}
 				}
+				//mocht deze klas geen studenten bevatten omdat de csv niet heeft gewerkt:
+				if (k.getStudenten().isEmpty()) {
+					k.voegStudentToe(dummyStudent);
+					System.out.println("Had to add Stu de nt to class: "+k.getKlasCode());
+				}
 			}	
 			
 		}
+		//mocht de lijst met studenten nu nog leeg zijn
+		if (pStudenten.isEmpty()) pStudenten.add(dummyStudent);
 	}	
 
 
