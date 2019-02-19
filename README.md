@@ -5,7 +5,9 @@ Basic repo containing the initial application for HU's educational program for S
 
 This is a *Polymer* application, based on *bower* running on *npm*
 
-Before running the application class as a Java Application execute the instructions as mentioned in webapp/todo.md and webapp/app/todo.md, they will inform you to run *bower update* as well as *polymer lint* on said locations.
+Before running the application class as a Java Application execute the instructions as mentioned in webapp/todo.md and webapp/app/todo.md, they will inform you to run *bower update* as well as *polymer lint* on said locations. This will take quite a while.
+
+After these steps you can run controller.Application as a Java Application and navigate to [http://localhost:8888 "http://localhost:8888"]
 
 ##Development kit
 

@@ -96,13 +96,7 @@ public class PrIS {
 	}
 
 	public Klas getKlasVanStudent(Student pStudent) {
-		// used
-		for (Klas lKlas : deKlassen) {
-			if (lKlas.bevatStudent(pStudent)) {
-				return (lKlas);
-			}
-		}
-		return null;
+		return deKlassen.stream().filter(k->k.bevatStudent(pStudent)).findFirst().orElse(null);
 	}
 
 	public Student getStudent(String pGebruikersnaam) {
@@ -168,7 +162,6 @@ public class PrIS {
 			// verify content of arraylist, if empty add Jos
 			if (pDocenten.isEmpty())
 				pDocenten.add(new Docent("Jos", "van", "Reenen", "supergeheim", "jos.vanreenen@hu.nl", 1));
-
 		}
 	}
 
@@ -191,7 +184,7 @@ public class PrIS {
 
 	private void vulStudenten(ArrayList<Student> pStudenten, ArrayList<Klas> pKlassen) {
 		Student lStudent;
-		Student dummyStudent = new Student("Stu", "de", "nt", "geheim", "test@student.hu.nl", 0);
+		Student dummyStudent = new Student("Stu", "de", "Student", "geheim", "test@student.hu.nl", 0);
 		for (Klas k : pKlassen) {
 			// per klas
 			String csvFile = "././CSV/" + k.getNaam() + ".csv";
@@ -234,7 +227,7 @@ public class PrIS {
 				// mocht deze klas geen studenten bevatten omdat de csv niet heeft gewerkt:
 				if (k.getStudenten().isEmpty()) {
 					k.voegStudentToe(dummyStudent);
-					System.out.println("Had to add Stu de nt to class: " + k.getKlasCode());
+					System.out.println("Had to add Stu de Student to class: " + k.getKlasCode());
 				}
 			}
 
