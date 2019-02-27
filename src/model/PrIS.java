@@ -43,14 +43,9 @@ public class PrIS {
 	public PrIS() {
 		deDocenten = new ArrayList<Docent>();
 		deStudenten = new ArrayList<Student>();
-		deKlassen = new ArrayList<Klas>();
-
-		// Inladen klassen
-		vulKlassen(deKlassen);
-
-		// Inladen studenten in klassen
+		deKlassen = new ArrayList<Klas>(); // Inladen klassen
+		vulKlassen(deKlassen); // Inladen studenten in klassen
 		vulStudenten(deStudenten, deKlassen);
-
 		// Inladen docenten
 		vulDocenten(deDocenten);
 
@@ -96,7 +91,7 @@ public class PrIS {
 	}
 
 	public Klas getKlasVanStudent(Student pStudent) {
-		return deKlassen.stream().filter(k->k.bevatStudent(pStudent)).findFirst().orElse(null);
+		return deKlassen.stream().filter(k -> k.bevatStudent(pStudent)).findFirst().orElse(null);
 	}
 
 	public Student getStudent(String pGebruikersnaam) {
