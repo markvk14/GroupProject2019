@@ -8,7 +8,7 @@ import model.PrIS;
 import server.Conversation;
 import server.Handler;
 
-class LoginController implements Handler {
+class wachtwoordVeranderen implements Handler {
 	private PrIS informatieSysteem;
 
 	/**
@@ -18,29 +18,23 @@ class LoginController implements Handler {
 	 * 
 	 * @param infoSys - het toegangspunt tot het domeinmodel
 	 */
-	public LoginController(PrIS infoSys) {
+	public wachtwoordVeranderen(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
 
 	public void handle(Conversation conversation) {
-		if (conversation.getRequestedURI().startsWith("/login")) {
-			login(conversation);
+		if (conversation.getRequestedURI().startsWith("/passwordChange")) {
+			passwordChange(conversation);
 		}
 	}
 
-	/**
-	 * Deze methode haalt eerst de opgestuurde JSON-data op. Daarna worden de
-	 * benodigde gegevens uit het domeinmodel gehaald. Deze gegevens worden dan weer
-	 * omgezet naar JSON en teruggestuurd naar de Polymer-GUI!
-	 *
-	 * @param conversation - alle informatie over het request
-	 */
-	private void login(Conversation conversation) {
+	private void passwordChange(Conversation conversation) {
 		JsonObject lJsonObjIn = (JsonObject) conversation.getRequestBodyAsJSON();
 
-		String lGebruikersnaam = lJsonObjIn.getString("username"); // Uitlezen van opgestuurde inloggegevens...
-		String lWachtwoord = lJsonObjIn.getString("password");
-		String lRol = informatieSysteem.login(lGebruikersnaam, lWachtwoord); // inloggen methode aanroepen op
+		String lnieuwWachtwoord;
+		String lherhaalNieuwWachtwoord;
+		String loudWachtwoord = lJsonObjIn.getString("password");
+		String lRol = informatieSysteem.passwordChange(loudWachtwoord, lnieuwWachtwoord, lherhaalNieuwWachtwoord); // inloggen methode aanroepen op
 																				// domeinmodel...
 		System.out.println(lRol);
 		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
@@ -50,3 +44,4 @@ class LoginController implements Handler {
 		conversation.sendJSONMessage(lJsonOut); // terugsturen naar de Polymer-GUI!
 	}
 }
+
