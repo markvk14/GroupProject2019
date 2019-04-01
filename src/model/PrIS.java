@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import model.klas.Klas;
+import model.les.les;
 import model.persoon.Docent;
 import model.persoon.Student;
 
@@ -19,6 +20,7 @@ public class PrIS {
 	private ArrayList<Docent> deDocenten;
 	private ArrayList<Student> deStudenten;
 	private ArrayList<Klas> deKlassen;
+	private ArrayList<les> deLessen;
 
 	/**
 	 * De constructor maakt een set met standaard-data aan. Deze data moet nog
@@ -46,10 +48,7 @@ public class PrIS {
 		deDocenten = new ArrayList<Docent>();
 		deStudenten = new ArrayList<Student>();
 		deKlassen = new ArrayList<Klas>(); // Inladen klassen
-		vulKlassen(deKlassen); // Inladen studenten in klassen
-		vulStudenten(deStudenten, deKlassen);
-		// Inladen docenten
-		vulDocenten(deDocenten);
+
 
 	} // Einde Pris constructor
 
@@ -285,5 +284,43 @@ public class PrIS {
 		if (pStudenten.isEmpty())
 			pStudenten.add(dummyStudent);
 	}
-	
+	public void vulLessen(ArrayList<les> pLessen) {
+		String csvFile = "././CSV/rooster.csv";
+		String csvSplitBy = ",";
+		BufferedReader br = null;
+		String line = "";
+		int i = 0;
+		
+		try {
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+				i++;
+				// use comma as separator
+				String[] element = line.split(csvSplitBy);
+				String Cursuscode = element[1];
+				String Starttijd = element[5];
+				String Eindtijd = element[8];
+				String Docenten = element[11];
+				String Groep = element[13];
+				String Datum = element[4];
+				pLessen.add(new les(Datum, Starttijd, Eindtijd, Cursuscode, Docenten, Groep));
+			
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// close the bufferedReader if opened.
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		
+	}
+}
 }
