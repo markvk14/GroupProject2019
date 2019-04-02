@@ -328,10 +328,6 @@ public class PrIS {
 }
 	public ArrayList<les> returnLessen() {
 		ArrayList<les> List = vulLessen(deLessen);
-		System.out.println(List);
-		for (int j = 0; j < List.size(); j++) {
-			System.out.println(List.get(j).returnLes());
-		}
 		return List;
 	}
 }
