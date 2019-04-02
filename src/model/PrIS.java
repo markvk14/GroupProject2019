@@ -48,6 +48,7 @@ public class PrIS {
 		deDocenten = new ArrayList<Docent>();
 		deStudenten = new ArrayList<Student>();
 		deKlassen = new ArrayList<Klas>(); // Inladen klassen
+		deLessen = new ArrayList<les>();
 
 
 	} // Einde Pris constructor
@@ -284,7 +285,7 @@ public class PrIS {
 		if (pStudenten.isEmpty())
 			pStudenten.add(dummyStudent);
 	}
-	public void vulLessen(ArrayList<les> pLessen) {
+	public ArrayList<les> vulLessen(ArrayList<les> pLessen) {
 		String csvFile = "././CSV/rooster.csv";
 		String csvSplitBy = ",";
 		BufferedReader br = null;
@@ -304,7 +305,7 @@ public class PrIS {
 				String Groep = element[13];
 				String Datum = element[4];
 				pLessen.add(new les(Datum, Starttijd, Eindtijd, Cursuscode, Docenten, Groep));
-			
+				System.out.println("added les " + i);
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -320,7 +321,17 @@ public class PrIS {
 					e.printStackTrace();
 				}
 			}
-		
-	}
+
+		}
+		return pLessen;
+
 }
+	public ArrayList<les> returnLessen() {
+		ArrayList<les> List = vulLessen(deLessen);
+		System.out.println(List);
+		for (int j = 0; j < List.size(); j++) {
+			System.out.println(List.get(j).returnLes());
+		}
+		return List;
+	}
 }

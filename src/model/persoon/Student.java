@@ -1,5 +1,10 @@
 //checked
 package model.persoon;
+import model.les.les;
+
+import java.util.ArrayList;
+
+import model.PrIS;
 
 public class Student extends Persoon {
 
@@ -35,4 +40,17 @@ public class Student extends Persoon {
 		return this.studentNummer;
 	}
 
+
+	@SuppressWarnings("null")
+	public ArrayList<les> getLessen() {
+		PrIS infoSysteem = new PrIS();
+		ArrayList<les> eigenLessen = null;
+		ArrayList<les> alleLessen = infoSysteem.returnLessen();
+		for (int i = 0; i < alleLessen.size(); i++) {
+			if (alleLessen.get(i).returnKlas() == groepId);{
+				eigenLessen.add(alleLessen.get(i));
+		}
+		}
+		return eigenLessen;
+	}
 }

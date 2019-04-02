@@ -29,4 +29,13 @@ public class les {
 	public void removeZieke(Student student) {
 		Zieken.remove(student);
 	}
+	public String returnLes() {
+		String Les = Datum+","+Starttijd+","+Eindtijd+","+Cursuscode+","+Docenten+","+Groep;
+		return Les;
+		
+		
+	}
+	public String returnKlas() {
+		return Groep;
+	}
 }
