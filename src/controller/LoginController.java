@@ -32,7 +32,7 @@ class LoginController implements Handler {
 	 * Deze methode haalt eerst de opgestuurde JSON-data op. Daarna worden de
 	 * benodigde gegevens uit het domeinmodel gehaald. Deze gegevens worden dan weer
 	 * omgezet naar JSON en teruggestuurd naar de Polymer-GUI!
-	 *
+	 * 
 	 * @param conversation - alle informatie over het request
 	 */
 	private void login(Conversation conversation) {

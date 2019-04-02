@@ -151,12 +151,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Inloggen</span>
           </a>
 
+          <a name="wachtwoordveranderen" href$="[[_c_baseURL]]wachtwoordveranderen"  verborgen$="[[!_are_strings_equal(_rol, 'undefined')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Wachtwoord veranderen</span>
+          </a>
+
           <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Uitloggen</span>
           </a>
 
+          <a name="roostertonen" href$="[[_c_baseURL]]roostertonen"  verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
+            <iron-icon icon="social:group"></iron-icon>
+            <span>Toon Rooster</span>
+          </a>
+
           <!-- beschikbaar voor docent -->
+          <a name="statistiektonen" href$="[[_c_baseURL]]student_docent"  verborgen$="[[!_are_strings_equal(_rol, 'docent')]]">
+            <iron-icon icon="social:group"></iron-icon>
+            <span>Toon Statistieken</span>
+          </a>
 
           <!-- beschikbaar voor student -->
           <a name="student_medestudenten" href$="[[_c_baseURL]]student_medestudenten"  verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
@@ -191,8 +205,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- element$="none" of weglaten van element$ geeft beide aan dat er geen polymerElement gebruikt zal gaan worden -->
         <section page-name="home" title="HOME" element$="none">
           <paper-material elevation="1">
-              <p>Demo app gebaseerd op Polymer.</p>
-              <p>Deze app past nadat je bent ingelogged het menu aan, aan de rol die gekoppeld is aan de ingeloggede user.</p>
+              <p>Welkom om het Presentie InformatieSysteem van de HU</p>
+              <p>Log in om jouw rooster in te zien.</p>
           </paper-material>
         </section>
 
@@ -217,8 +231,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <section page-name="login"
               	   title="LOGIN"
               	   element$="my-login">
-            <paper-material elevation="1" style="max-width: 380px;">'
+            <paper-material elevation="1" style="max-width: 380px;">
               <my-login username="{{_username}}" rol="{{_rol}}" ></my-login>
+            </paper-material>
+          </section>
+
+          <section page-name="wachtwoordveranderen"
+                  title="WACHTWOORDVERANDEREN"
+                  element$="my-wachtwoordveranderen">
+            <paper-material elevation="1" style="max-width: 380px;">
+              <my-wachtwoordveranderen rol="{{_rol}}"></my-wachtwoordveranderen>
             </paper-material>
           </section>
 
@@ -244,6 +266,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                           De aanwezige literal waarde wordt met enkele quotes doorgegeven
               -->
               <my-medestudenten
+                c_visible="[[_are_strings_equal(_ar_page, 'student_medestudenten')]]"
+                c_rol="[[_rol]]"
+                c_username="[[_username]]">
+              </my-medestudenten>
+            </paper-material>
+          </section>
+
+          <section  page-name="roostertonen"
+                    title="OVERZICHT ROOSTER"
+                    element$="my-rooster">
+            <paper-material elevation="1">
+              <!--
+                  c_visible="true" als deze section geselecteerd is.
+                  LET OP: boolean values moeten als string doorgegeven worden,
+                          vandaar de quotes rondom de function aanroep.
+                          De aanwezige literal waarde wordt met enkele quotes doorgegeven
+              -->
+              <my-rooster
                 c_visible="[[_are_strings_equal(_ar_page, 'student_medestudenten')]]"
                 c_rol="[[_rol]]"
                 c_username="[[_username]]">

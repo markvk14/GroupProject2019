@@ -8,7 +8,7 @@
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
-<dom-module id="my-login">
+<dom-module id="my-wachtwoordveranderen">
   <template>
     <style>
       :host > * {
@@ -57,32 +57,28 @@
       }
     </style>
 
-    <paper-toast id="toast_reeds_aangelogd" duration="0" text="U bent al ingelogd!">
-      <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
-    </paper-toast>
-
     <div class="usericondiv">
       <iron-icon icon="icons:perm-identity" class="my-icon"></iron-icon>
     </div>
     <div class="my-input">
-      <paper-input id="email_element" on-keydown="_checkForEnter" label="gebruikersnaam" value="{{username}}"></paper-input>
-      <paper-input id="wachtwoord_element" on-keydown="_checkForEnter" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
+       <paper-input id="oudwachtwoord_element" on-keydown="_checkForEnter" label="oudwachtwoord" type=String></paper-input>
+       <paper-input id="nieuwwachtwoord_element" on-keydown="_checkForEnter" label="nieuwwachtwoord" type=String></paper-input>
     </div>
 
     <paper-button
-      id="login_button_element"
+      id="wachtwoordveranderen_button_element"
       class="my-button"
-      on-click="_ophalen_login_request_handler"
+      on-click="_ophalen_wachtwoordveranderen_request_handler"
       raised>
         Inloggen
     </paper-button>
 
     <iron-ajax
-      id="ajax_login"
+      id="ajax_wachtwoordveranderen"
       method="POST"
-      url="/login"
+      url="/wachtwoordveranderen"
       handle-as="json"
-      on-response="_ophalen_login_response_handler">
+      on-response="_ophalen_wachtwoordveranderen_response_handler">
     </iron-ajax>
 
   </template>
@@ -97,39 +93,6 @@
          xxxx  public               : two way external databinding {{xxxx}} - notify nodig
       */
       Polymer({
-        is: 'my-login',
-
-        properties: {
-          _password: {
-            type: String,
-            value: "geheim",                           /* om snel te testen zonder steeds input te doen */
-          },
-          rol: {
-            type: String,
-            notify: true,
-          },
-          username: {
-            type: String,
-            value: "guillaume.chinasen@student.hu.nl",              /* om snel te testen zonder steeds input te doen */
-            notify: true
-          },
-        },
-
-        _checkForEnter: function (e) {
-          if (e.currentTarget.id == "email_element") {
-            if (e.keyCode === 13) {
-              var lWachtwoordElement =
-                this.$.wachtwoord_element;          /* haal uit de $ collectie van alle polymer element
-                                                       het element met id = "wachtwoord_element" */
-            lWachtwoordElement.focus();             // plaats de cursor er in
-            }
-          } else if (e.keyCode === 13) {
-            var lLoginButton =
-              this.$.login_button_element;          /* haal uit de $ collectie van alle polymer element
-                                                       het element met id = "login_button_element" */
-            this.$.login_button_element.click();    // forceer een klik
-          }
-        },
 
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
@@ -139,15 +102,15 @@
                                                         // zal ook de url echt wijzigen
          },
 
-         _ophalen_login_request_handler: function() {
-          console.log("_ophalen_login_request_handler username=" + this.username);
+         _ophalen_wachtwoordveranderen_request_handler: function() {
+          console.log("_ophalen_wachtwoord_request_handler oudwachtwoord=" + this.oudwachtwoord);
           if (this.rol == "undefined") {
-            this.$.ajax_login.contentType="application/json";
-            this.$.ajax_login.body={
-              "username":this.username,
-              "password":this._password
+            this.$.ajax_wachtwoordveranderen.contentType="application/json";
+            this.$.ajax_wachtwoordveranderen.body={
+              "oudwachtwoord":this.oudwachtwoord,
+              "nieuwwachtwoord":this._nieuwwachtwoord
             };
-            this.$.ajax_login.generateRequest();
+            this.$.ajax_wachtwoordveranderen.generateRequest();
           } else {
             var lToast = this.$.toast_reeds_aangelogd;     // meldt reeds aangelogd
             lToast.open();                                  /* het sluiten van deze error verwijst  */
@@ -155,17 +118,16 @@
           }
         },
 
-        _ophalen_login_response_handler: function(request) {
-          console.log("_ophalen_login_response_handler username="+this.username);
+        _ophalen_wachtwoordveranderen_response_handler: function(request) {
+          console.log("_ophalen_wachtwoord_response_handler oudwachtwoord="+this.oudwachtwoord);
           this.rol = request.detail.response.rol;
           /* this._password = ""; /* om snel te kunnen testen is dit verwijderd */
           if (this.rol == "undefined") {                    //als aanloggen mislukt
-            this.$.email_element.invalid = true;                // markeer email-element
             this.$.wachtwoord_element.invalid = true;           // markeer wachtwoord-element
 
           } else {                                            // als aanloggen ok
-            this.$.email_element.invalid = false;               // verwijder fout markering
-            this.$.wachtwoord_element.invalid = false;          // verwijder fout markering
+            this.$.oudwachtwoord_element.invalid = false;               // verwijder fout markering
+            this.$.nieuwwachtwoord_element.invalid = false;          // verwijder fout markering
             this._go_home();                                    // ga naar de home page.
           }
         },

@@ -42,6 +42,9 @@ public class Application {
 
 		server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
 		server.registerHandler("/student/medestudenten/opslaan", medestudentenController);
+		
+		//Dit is voor het toevoegen van de register handler van geplande afwezigheid
+		//server.registerHandler(URI, GeplandeafwezigheidController);
 
 		server.start();
 	}

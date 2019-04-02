@@ -14,8 +14,6 @@ import model.persoon.Docent;
 import model.persoon.Student;
 
 public class PrIS {
-	private boolean isIngelogd = false;
-	private static int wachtwoordLengte = 8;
 	private ArrayList<Docent> deDocenten;
 	private ArrayList<Student> deStudenten;
 	private ArrayList<Klas> deKlassen;
@@ -24,23 +22,23 @@ public class PrIS {
 	 * De constructor maakt een set met standaard-data aan. Deze data moet nog
 	 * uitgebreidt worden met rooster gegevens die uit een bestand worden ingelezen,
 	 * maar dat is geen onderdeel van deze demo-applicatie!
-	 *
+	 * 
 	 * De klasse PrIS (PresentieInformatieSysteem) heeft nu een meervoudige
 	 * associatie met de klassen Docent, Student, Vakken en Klassen Uiteraard kan
 	 * dit nog veel verder uitgebreid en aangepast worden!
-	 *
+	 * 
 	 * De klasse fungeert min of meer als ingangspunt voor het domeinmodel. Op dit
 	 * moment zijn de volgende methoden aanroepbaar:
-	 *
+	 * 
 	 * String login(String gebruikersnaam, String wachtwoord) Docent
 	 * getDocent(String gebruikersnaam) Student getStudent(String gebruikersnaam)
 	 * ArrayList<Student> getStudentenVanKlas(String klasCode)
-	 *
+	 * 
 	 * Methode login geeft de rol van de gebruiker die probeert in te loggen, dat
 	 * kan 'student', 'docent' of 'undefined' zijn! Die informatie kan gebruikt
 	 * worden om in de Polymer-GUI te bepalen wat het volgende scherm is dat getoond
 	 * moet worden.
-	 *
+	 * 
 	 */
 	public PrIS() {
 		deDocenten = new ArrayList<Docent>();
@@ -108,7 +106,6 @@ public class PrIS {
 		for (Docent d : deDocenten) {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (d.komtWachtwoordOvereen(wachtwoord)) {
-					isIngelogd = true;
 					return "docent";
 				}
 			}
@@ -117,7 +114,6 @@ public class PrIS {
 		for (Student s : deStudenten) {
 			if (s.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (s.komtWachtwoordOvereen(wachtwoord)) {
-					isIngelogd = true;
 					return "student";
 				}
 			}
@@ -125,47 +121,6 @@ public class PrIS {
 
 		return "undefined";
 	}
-	
-	private String passwordChange(String wachtwoord, String nieuwWachtwoord, String herhaalNieuwWachtwoord) {
-		int charCount = 0;
-		int numCount = 0;
-		for (Student s : deStudenten) {
-			if (isIngelogd == true){
-				if (s.komtWachtwoordOvereen(wachtwoord)) {
-					System.out.println("wachtwoord komt overeen");
-					if (nieuwWachtwoord == herhaalNieuwWachtwoord) {
-						return "wachtwoorden zijn niet gelijk!";
-					}
-					
-					for (int i = 0; i < nieuwWachtwoord.length(); i++) {
-						char ch = nieuwWachtwoord.charAt(i);
-						
-			            if (is_Numeric(ch)) numCount++;
-			            	else if (is_Letter(ch)) charCount++;
-			            		else return "gebruik alleen cijfers en letters!";
-						}
-								if (nieuwWachtwoord.length() < wachtwoordLengte) {
-										return "wachtwoord is te kort";
-					}
-				}
-			}else return "log eerst in!";
-				
-			}
-		return null;
-	}
-	
-	public static boolean is_Letter(char ch) {
-        ch = Character.toUpperCase(ch);
-        return (ch >= 'A' && ch <= 'Z');
-    }
-
-
-    public static boolean is_Numeric(char ch) {
-
-        return (ch >= '0' && ch <= '9');
-    }
-	
-	
 
 	private void vulDocenten(ArrayList<Docent> pDocenten) {
 		String csvFile = "././CSV/docenten.csv";
@@ -183,12 +138,7 @@ public class PrIS {
 				String voornaam = element[1];
 				String tussenvoegsel = element[2];
 				String achternaam = element[3];
-				String wachtwoord = element[4];
-				if (element[4] == null) {
-					wachtwoord = "geheim";
-				}
-				
-				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, wachtwoord , gebruikersnaam, 1));
+				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, 1));
 			}
 
 		} catch (FileNotFoundException e) {
@@ -206,7 +156,7 @@ public class PrIS {
 			}
 			// verify content of arraylist, if empty add Jos
 			if (pDocenten.isEmpty())
-				pDocenten.add(new Docent("Jos", "van", "Reenen", "sup+ergeheim", "jos.vanreenen@hu.nl", 1));
+				pDocenten.add(new Docent("Jos", "van", "Reenen", "supergeheim", "jos.vanreenen@hu.nl", 1));
 		}
 	}
 
@@ -249,14 +199,10 @@ public class PrIS {
 							.toLowerCase();
 					// verwijder spaties tussen dubbele voornamen en tussen bv van der
 					gebruikersnaam = gebruikersnaam.replace(" ", "");
-					String wachtwoord = element[4];
-					if (element[4] == null) {
-						wachtwoord = "geheim";
-					}
 					String lStudentNrString = element[0];
 					int lStudentNr = Integer.parseInt(lStudentNrString);
 					// Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
-					lStudent = new Student(element[3], element[2], element[1], wachtwoord , gebruikersnaam, lStudentNr);
+					lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr);
 					pStudenten.add(lStudent);
 					k.voegStudentToe(lStudent);
 				}
@@ -285,5 +231,5 @@ public class PrIS {
 		if (pStudenten.isEmpty())
 			pStudenten.add(dummyStudent);
 	}
-	
+
 }
