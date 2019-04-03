@@ -38,4 +38,7 @@ public class les {
 	public String returnKlas() {
 		return Groep;
 	}
+	public String returnCursuscode() {
+		return Cursuscode;
+	}
 }

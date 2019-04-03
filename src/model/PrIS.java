@@ -290,23 +290,26 @@ public class PrIS {
 		String csvSplitBy = ",";
 		BufferedReader br = null;
 		String line = "";
-		int i = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
 			while ((line = br.readLine()) != null) {
-				i++;
 				// use comma as separator
-				String[] element = line.split(csvSplitBy);
-				String Cursuscode = element[1];
-				String Starttijd = element[5];
-				String Eindtijd = element[8];
-				String Docenten = element[11];
-				String Groep = element[13];
-				String Datum = element[4];
-				pLessen.add(new les(Datum, Starttijd, Eindtijd, Cursuscode, Docenten, Groep));
-				System.out.println("added les " + i);
+				line = line.replaceAll(",", "");
+				String[] element = line.split("\"");
+			    for(int i = 0;i<element.length;i++) {
+			        element[i] = element[i].replaceAll("\"", "");
+			    }
+		        String Datum = element[9];
+		        String Starttijd = element[11];
+		        String Eindtijd = element[17];
+		        String Groep = element[27];
+		        String Docenten = element[23];
+		        String Cursuscode = element[3];
+		        pLessen.add(new les(Datum, Starttijd, Eindtijd, Cursuscode, Docenten, Groep));
 			}
+			pLessen.remove(0);
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

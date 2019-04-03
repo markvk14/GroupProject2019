@@ -47,7 +47,8 @@ public class Student extends Persoon {
 		ArrayList<les> eigenLessen = null;
 		ArrayList<les> alleLessen = infoSysteem.returnLessen();
 		for (int i = 0; i < alleLessen.size(); i++) {
-			if (alleLessen.get(i).returnKlas() == groepId);{
+			String[] groepCodes = alleLessen.get(i).returnKlas().split("-");
+			if (groepCodes[2] == groepId) {
 				eigenLessen.add(alleLessen.get(i));
 		}
 		}
