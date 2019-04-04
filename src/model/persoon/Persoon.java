@@ -1,8 +1,12 @@
 package model.persoon;
 
-public abstract class Persoon {
+public abstract class Persoon{
 
-	private String voornaam, tussenvoegsel, achternaam, wachtwoord, gebruikersnaam;
+	private String voornaam;
+	private String tussenvoegsel;
+	private String achternaam;
+	private String wachtwoord;
+	private String gebruikersnaam;
 
 	public Persoon(String voornaam, String tussenvoegsel, String achternaam, String wachtwoord, String gebruikersnaam) {
 		this.voornaam = voornaam;
@@ -10,20 +14,6 @@ public abstract class Persoon {
 		this.achternaam = achternaam;
 		this.wachtwoord = wachtwoord;
 		this.gebruikersnaam = gebruikersnaam;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		boolean gelijk = false;
-		if (obj instanceof Persoon) {
-			Persoon p = (Persoon) obj;
-			gelijk = this.voornaam.equals(p.voornaam) && this.tussenvoegsel.equals(p.tussenvoegsel)
-					&& this.achternaam.equals(p.achternaam) && this.wachtwoord.equals(p.wachtwoord)
-					&& this.gebruikersnaam.equals(gebruikersnaam);
-		}
-		return gelijk;
 	}
 
 	public String getVoornaam() {
@@ -43,7 +33,7 @@ public abstract class Persoon {
 	}
 
 	public String getVolledigeAchternaam() {
-		String lVolledigeAchternaam = "";
+		String lVolledigeAchternaam="";
 		if (this.tussenvoegsel != null && this.tussenvoegsel != "" && this.tussenvoegsel.length() > 0) {
 			lVolledigeAchternaam += this.tussenvoegsel + " ";
 		}
@@ -57,5 +47,19 @@ public abstract class Persoon {
 			lStatus = true;
 		}
 		return lStatus;
+	}
+	
+	public boolean equals(Object obj){
+		boolean gelijkenObjecten = false;
+		if  (obj instanceof Persoon){
+			Persoon anderePersoon = (Persoon) obj;
+			if (voornaam == anderePersoon.getVoornaam() &&
+					getVolledigeAchternaam() == anderePersoon.getVolledigeAchternaam() &&
+					wachtwoord == anderePersoon.getWachtwoord() &&
+					gebruikersnaam == anderePersoon.getGebruikersnaam() ){		
+				gelijkenObjecten = true;
+			}
+		}
+		return gelijkenObjecten;
 	}
 }

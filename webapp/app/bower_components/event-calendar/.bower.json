@@ -1,0 +1,39 @@
+{
+  "name": "event-calendar",
+  "version": "0.1.6",
+  "description": "Custom calendar polymer components with support for events display.",
+  "license": "MIT",
+  "main": "dist/event-calendar.html",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "webcomponents",
+    "calendar"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.1",
+    "core-icon-button": "Polymer/core-icon-button#~0.5.4",
+    "moment": "~2.9.0",
+    "core-pages": "Polymer/core-pages#~0.5.4",
+    "paper-dialog": "Polymer/paper-dialog#~0.5.4"
+  },
+  "devDependencies": {
+    "web-component-tester": "~2.2.3"
+  },
+  "homepage": "https://github.com/JoppeSchwartz/event-calendar",
+  "_release": "0.1.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.6",
+    "commit": "32498c4415d08f088138dc354aefbd322eb0a367"
+  },
+  "_source": "https://github.com/JoppeSchwartz/event-calendar.git",
+  "_target": "^0.1.6",
+  "_originalSource": "event-calendar",
+  "_direct": true
+}

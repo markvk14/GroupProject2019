@@ -1,0 +1,17 @@
+{
+  "name": "sgb-fullcalendar",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Smorgasbord-Development/sgb-fullcalendar",
+  "authors": [
+    "anders.wahlgren@starcounter.com"
+  ],
+  "description": "fullcalendar webcomponent wrapper (experimental)",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -11,7 +11,7 @@
 <dom-module id="my-login">
   <template>
     <style>
-      :host > * {
+      :root {
         --paper-input-container-focus-color: #1a9fd9;
       }
       :host {
@@ -19,7 +19,7 @@
       }
 
       span {
-        @apply --paper-font-body1;
+        @apply(--paper-font-body1);
       }
       .toast-button {
         text-transform: none;
@@ -29,8 +29,8 @@
         margin-left: 0px;
       }
       .usericondiv {
-         @apply --layout-horizontal;
-         @apply --layout-center-justified;
+         @apply(--layout-horizontal);
+         @apply(--layout-center-justified);
        }
       .my-icon {
         border: #D4D4D4 3px solid;
@@ -66,7 +66,7 @@
     </div>
     <div class="my-input">
       <paper-input id="email_element" on-keydown="_checkForEnter" label="gebruikersnaam" value="{{username}}"></paper-input>
-      <paper-input id="wachtwoord_element" on-keydown="_checkForEnter" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
+      <paper-input id="wachtwoord_element" on-keydown="_checkForEnter" label="wachtwoord" type="password" value="{{password}}"></paper-input>
     </div>
     <paper-button
       id="login_button_element"
@@ -109,7 +109,7 @@
           },
           username: {
             type: String,
-            value: "john.smeets@hu.nl",              /* om snel te testen zonder steeds input te doen */
+            value: "alex.jongman@hu.nl",              /* om snel te testen zonder steeds input te doen */
             notify: true
           },
         },
@@ -157,7 +157,7 @@
         _ophalen_login_response_handler: function(request) {
           console.log("_ophalen_login_response_handler username="+this.username);
           this.rol = request.detail.response.rol;
-          /* this._password = ""; /* om snel te kunnen testen is dit verwijderd */
+          this._password = "geheim"; /* om snel te kunnen testen is dit verwijderd */
           if (this.rol == "undefined") {                    //als aanloggen mislukt
             this.$.email_element.invalid = true;                // markeer email-element
             this.$.wachtwoord_element.invalid = true;           // markeer wachtwoord-element

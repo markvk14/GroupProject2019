@@ -1,0 +1,350 @@
+<!--
+Copyright 2015 Smörgåsbord-Development. All rights reserved.
+-->
+<!--
+/**
+ * sgb-fullcalendar
+ * Wrapper for http://fullcalendar.io/
+ */
+-->
+<link rel="import" href="../../sys/polymer/polymer.html">
+
+<script src='fullcalendar/lib/jquery.min.js'></script>
+<script src='fullcalendar/lib/moment.min.js'></script>
+<script src='fullcalendar/fullcalendar.js'></script>
+<script src='fullcalendar/lang-all.js'></script>
+<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
+<link href='fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+
+<dom-module id="sgb-fullcalendar">
+
+	<script>
+
+	    "use strict";
+
+	    Polymer({
+	        is: "sgb-fullcalendar",
+	        hostAttributes: {
+
+	        },
+	        properties: {
+	            showDate: {
+	                type: String,
+	                value: null,
+	                notify: true,
+	                observer: 'showDateChanged'
+	            },
+	            refreshTrigger: {
+	                type: Boolean,
+	                value: false,
+	                observer: 'refreshTriggerChanged'
+	            },
+	            eventSelection: { type: String, value: "", notify: true },
+	            selectionStart: "",
+	            selectionEnd: "",
+	            eventItems: {
+	                type: Array,
+	                value: function () {
+	                    return [];
+	                }
+	            },
+	            headerLeft: { type: String, value: "", notify: true },
+	            headerCenter: { type: String, value: "", notify: true },
+	            headerRight: { type: String, value: "", notify: true },
+	            dayClicked: { type: String, value: "", notify: true },
+	            showView: {
+	                type: String,
+	                value: "agendaDay",
+	                notify: true,
+	                observer: 'showViewChanged'
+	            },
+	            fetchStart: { type: String, value: null, notify: true },
+	            fetchEnd: { type: String, value: null, notify: true },
+	            isEditable: { type: Boolean, value: true },
+	            isDefered: { type: Boolean, value: false },
+	            calendarCallback: { type: Object, value: null }
+	        },
+	        observers: [
+	            'eventItemsChanged(eventItems.*)'
+	        ],
+	        updateCalendarCallback: function () {
+
+	            jQuery(this.container).fullCalendar('refetchEvents');
+	            this.isDefered = false;
+	        },
+	        eventItemsChanged: function (changeRecord) {
+
+	            var self = this;
+	            if (this.isDefered == false) {
+	                this.isDefered = true;
+	                setTimeout(function () {
+	                    self.updateCalendarCallback();
+	                }, 1);
+	            }
+	        },
+	        url: "",
+	        eventClickedID: "",
+	        eventChanged: "",
+	        isDomReady: false,
+	        getEventObj: function (id) {
+	            var result = jQuery(this.container).fullCalendar('clientEvents', id);
+
+	            if (result.length > 0) {
+	                return result[0];
+	            }
+
+	            return null;
+	        },
+	        created: function () {
+
+	            this.container = document.createElement("div");
+	            this.appendChild(this.container);
+	        },
+	        attached: function () {
+
+	            this.async(function () {
+	                this.isDomReady = true;
+	                var self = this;
+
+	                var newPath = window.location.pathname + "?" + "view=" + this.showView + "&day=" + this.showDate;
+	                window.history.replaceState(null, null, newPath);
+
+	                jQuery(this.container).fullCalendar({
+	                    timezone: "local",
+	                    firstDay: 1,
+	                    allDaySlot: true,
+	                    weekNumbers: false,
+	                    defaultView: self.showView,
+	                    lang: navigator.language || navigator.userLanguage, // TODO: Language?
+	                    unselectAuto: false,
+	                    header: {
+	                        left: self.headerLeft,
+	                        center: self.headerCenter,
+	                        right: self.headerRight
+	                    },
+	                    defaultDate: self.showDate,
+	                    editable: self.isEditable,
+	                    selectable: self.isEditable,
+	                    selectHelper: false,
+	                    viewRender: function (view, element) {
+
+	                        var bUpdateBrowserHistory = false;;
+	                        var dateStr = jQuery(self.container).fullCalendar('getDate').format();
+	                        if (self.showDate != dateStr) {
+	                            self.showDate = dateStr;
+	                            bUpdateBrowserHistory = true;
+	                        }
+
+	                        if (self.showView != view.name) {
+	                            self.showView = view.name;
+	                            bUpdateBrowserHistory = true;
+	                        }
+
+	                        if (bUpdateBrowserHistory) {
+	                            var newPath = window.location.pathname + "?" + "view=" + view.name + "&day=" + self.showDate;
+	                            window.history.pushState(null, null, newPath);
+	                        }
+
+	                        if (view.name == 'month') {
+	                            jQuery(self.container).fullCalendar('option', 'aspectRatio', 1.35);
+	                        }
+	                        else {
+	                            jQuery(self.container).fullCalendar('option', 'aspectRatio', 1.0);
+	                        }
+	                    },
+	                    eventLimit: true, // allow "more" link when too many events
+	                    dayClick: function (date, jsEvent, view) {
+
+	                        var hasTime = date.hasTime();
+	                        var d = new Date();
+
+	                        if (self.showView == "month") {
+	                            // Goto day
+	                            self.dayClicked = date.toJSON() + ";" + d.getTime(); // add number so the patch is sent
+
+	                            // Switch view
+	                            self.showView = "agendaDay";
+
+	                            // Select date
+	                            self.showDate = date.format();
+
+	                            var newPath = window.location.pathname + "?" + "view=" + self.showView + "&day=" + self.showDate;
+	                            window.history.pushState(null, null, newPath);
+	                            return;
+	                        }
+
+	                        if (hasTime == false) {
+	                            // Create allday event
+	                            // The date is in local mode (NOT in UTC mode).
+	                            date.local();
+	                            self.eventSelection = date.toJSON() + ";" + "" + ";" + d.getTime(); // add number so the patch is sent
+	                        }
+	                    },
+	                    select: function (start, end, jsEvent, view) {
+
+	                        if (start.hasTime() && end.hasTime()) {
+	                            var d = new Date();
+	                            self.eventSelection = start.toJSON() + ";" + end.toJSON() + ";" + d.getTime(); // add number so the patch is sent
+	                            //jQuery(self.container).fullCalendar('unselect');
+	                        }
+	                        self.setPopupPosition(jsEvent);
+	                    },
+	                    eventClick: function (calEvent, jsEvent, view) {
+
+	                        // Trigger click
+	                        calEvent._source.Click$++;
+
+	                        self.setPopupPosition(jsEvent);
+	                    },
+	                    eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+
+	                        if (event.start.hasTime() && event.end.hasTime()) {
+	                            event._source.Moved$ = event.start.toJSON() + ";" + event.end.toJSON();
+	                        }
+	                    },
+	                    eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
+
+	                        //	                    if (event.start.hasTime() && event.end.hasTime()) {
+	                        event._source.Moved$ = event.start.toJSON() + ";" + event.end.toJSON();
+	                        //                      }
+	                    },
+	                    eventDataTransform: function (eventData) {
+
+	                        // Transform Server Reservation object to full calendar event object
+
+	                        return {
+	                            _source: eventData,
+
+	                            get id() { return this._source.ID; },
+	                            get end() { return this._source.EndTime; },
+	                            get start() { return this._source.BeginTime; },
+	                            get title() { return this._source.Name; },
+	                            get rendering() {
+	                                return (this._source.Background == true) ? "background" : "";
+	                            },
+	                            get backgroundColor() { return this._source.Color; },
+	                            get color() { return this._source.Color; },
+	                            get editable() { return this._source.Editable; },
+	                            get allDay() {
+
+	                                if (this._source.EndTime == "0001-01-01 00:00:00Z") {
+	                                    return true;
+	                                }
+
+	                                return this._source.FullDay;
+	                            },
+	                        };
+	                    },
+	                    events: function (start, end, timezone, callback) {
+                            // Start and End is in UTC
+                            // Convert start and end to local
+	                        start.local();
+	                        var startJson = start.toJSON();
+	                        if (self.fetchStart != startJson) {
+	                            self.fetchStart = startJson;
+	                        }
+
+	                        end.local();
+	                        var endJson = end.toJSON();
+	                        if (self.fetchEnd != endJson) {
+	                            self.fetchEnd = endJson;
+	                        }
+	                        callback(self.eventItems);
+	                    }
+	                });
+	                // for some reason this needs to be invoked asynchronously
+	                // see related: http://stackoverflow.com/questions/28599106/fullcalendar-view-not-showing-on-load
+                    	this.async(function() {
+	                     jQuery(self.container).fullCalendar('render');
+	                });
+	            });
+	        },
+	        refreshTriggerChanged: function (newValue, oldValue) {
+
+	            if (this.isDomReady == false) return;
+	            jQuery(this.container).fullCalendar('refetchEvents');
+	        },
+	        showViewChanged: function (newValue, oldValue) {
+
+	            if (this.isDomReady == false) return;
+
+	            // TODO:Close popup
+	            jQuery(this.container).fullCalendar('changeView', newValue);
+	        },
+	        showDateChanged: function (newValue, oldValue) {
+
+	            if (this.isDomReady == false) return;
+
+	            jQuery(this.container).fullCalendar('gotoDate', newValue);
+	        },
+	        setPopupPosition: function (jsEvent) {
+
+	            var popupElement = document.getElementById("popup");
+	            if (popupElement != null) {
+
+	                var borderMargin = 20;
+
+	                var popupWidth = parseInt(window.getComputedStyle(popup).width, 10);
+	                var popupHeight = parseInt(window.getComputedStyle(popup).height, 10);
+
+	                var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	                var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+	                if (isNaN(popupHeight)) {
+	                    popupHeight = windowHeight;
+	                    console.warn("Popup window has no height, set the height on the popup element style");
+	                }
+
+	                if (isNaN(popupWidth)) {
+	                    popupWidth = windowWidth;
+	                    console.warn("Popup window has no width, set the width on the popup element style");
+                    }
+
+
+	                var leftPos = jsEvent.clientX - (popupWidth / 2);
+	                if ((leftPos + popupWidth + borderMargin) > windowWidth) {
+	                    leftPos = windowWidth - popupWidth - borderMargin;
+	                }
+	                if (leftPos < borderMargin) {
+	                    leftPos = borderMargin;
+	                }
+	                var topPos = jsEvent.clientY - popupHeight;
+	                if ((topPos + popupHeight + borderMargin) > windowHeight) {
+	                    topPos = windowHeight - popupHeight - borderMargin;
+	                }
+	                if (topPos < borderMargin) {
+	                    topPos = borderMargin;
+	                }
+
+	                popupElement.style.left = leftPos + "px";
+	                popupElement.style.top = topPos + "px";
+	            }
+	            else {
+	                console.log("POPUP ELEMENT NOT FOUND");
+	            }
+	        },
+	        utcToLocal: function (utcDate) {
+
+	            // Input UTC string: "2014-04-01T21:00:00.000Z"
+	            // Output local: "2014-04-01 23:00:00"
+	            var year = utcDate.year();
+	            var month = utcDate.month();
+	            var date = utcDate.date();
+
+	            var hours = utcDate.hours();
+	            var minutes = utcDate.minutes();
+	            var seconds = utcDate.seconds();
+	            var milliseconds = utcDate.milliseconds();
+
+	            // Build string
+	            var str = this.pad(year, 4) + "-" + this.pad(month + 1, 2) + "-" + this.pad(date, 2) + "T" + this.pad(hours, 2) + ":" + this.pad(minutes, 2) + ":" + this.pad(seconds, 2) + "." + this.pad(milliseconds, 3) + "Z";
+	            return new Date(str);
+	        },
+	        pad: function (n, width, z) {
+	            z = z || '0';
+	            n = n + '';
+	            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+	        }
+	    });
+	</script>
+</dom-module>

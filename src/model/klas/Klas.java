@@ -1,8 +1,5 @@
 package model.klas;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import model.persoon.Student;
 
@@ -16,27 +13,41 @@ public class Klas {
 		this.klasCode = klasCode;
 		this.naam = naam;
 	}
-
+	
 	public String getKlasCode() {
 		return klasCode;
 	}
-
+	
 	public String getNaam() {
 		return naam;
 	}
 
-	public List<Student> getStudenten() {
-		return Collections.unmodifiableList(deStudenten);
+	public ArrayList<Student> getStudenten() {
+		return this.deStudenten;
 	}
-
+	
 	public boolean bevatStudent(Student pStudent) {
-		return this.getStudenten().contains(pStudent);
+		for (Student lStudent : this.getStudenten()) {
+			if (lStudent==pStudent) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void voegStudentToe(Student pStudent) {
 		if (!this.getStudenten().contains(pStudent)) {
-			this.deStudenten.add(pStudent);
+			this.getStudenten().add(pStudent);
 		}
 	}
-
+	public boolean equals(Object obj){
+		boolean gelijkenObjecten = false;
+		if  (obj instanceof Klas){
+			Klas andereKlas = (Klas) obj;
+			if (klasCode == andereKlas.klasCode &&  naam == andereKlas.naam && deStudenten == andereKlas.deStudenten){
+				gelijkenObjecten = true;
+			}
+		}
+		return gelijkenObjecten;
+	}
 }

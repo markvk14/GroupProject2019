@@ -1,0 +1,26 @@
+{
+  "name": "sgb-fullcalendar",
+  "homepage": "https://github.com/Smorgasbord-Development/sgb-fullcalendar",
+  "authors": [
+    "anders.wahlgren@starcounter.com"
+  ],
+  "description": "fullcalendar webcomponent wrapper (experimental)",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "94ba7c4cf2",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "94ba7c4cf2891c692d414de6c7f20218fb3d1868"
+  },
+  "_source": "https://github.com/Smorgasbord-Development/sgb-fullcalendar.git",
+  "_target": "*",
+  "_originalSource": "sgb-fullcalendar",
+  "_direct": true
+}

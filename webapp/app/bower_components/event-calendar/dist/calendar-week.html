@@ -1,0 +1,40 @@
+<link rel="import" href="./calendar-day.html">
+
+<polymer-element name="calendar-week" attributes="curDate events events startHour days" layout vertical>
+	<template>
+		<style>
+			:host, calendar-week {
+				display: block;
+				height: 100%;
+				overflow-y: scroll;
+				border: 1px solid black;
+			}
+			.day {
+				border: 1px solid black;
+			}
+			.scroll {
+				overflow-y: scroll;
+			}
+		</style>
+		<div horizontal layout flex scroll>
+			<template repeat="{{day, idx in days}}">
+				<div flex vertical layout>
+					<calendar-day flex date="{{day}}" events="{{events}}" startHour="{{startHour}}" nohours?="{{idx != 6}}"></calendar-day>
+				</div>
+			</template>
+		</div>
+	</template>
+	<script>
+		Polymer( {
+			ready: function() {
+			},
+			curDateChanged: function(oldVal, newVal) {
+				this.days = [];
+				var startDate = moment(this.curDate).startOf('week');
+				for (i = 0; i < 7; i++) {
+					this.days.push(moment(startDate).startOf('d').add(i, 'd'));
+				}
+			}
+		});
+	</script>
+</polymer-element>

@@ -1,4 +1,1 @@
-**/bower_components/
-.settings/
-bin/
-CSV/
+/bin/

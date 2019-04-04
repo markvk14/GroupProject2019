@@ -1,7 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -10,8 +10,9 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
-import model.klas.Klas;
 import model.persoon.Student;
+import model.klas.Klas;
+
 import server.Conversation;
 import server.Handler;
 
@@ -53,7 +54,7 @@ public class MedestudentenController implements Handler {
 		
 		Klas lKlas = informatieSysteem.getKlasVanStudent(lStudentZelf);		// klas van de student opzoeken
 
-    List<Student> lStudentenVanKlas = lKlas.getStudenten();	// medestudenten opzoeken
+    ArrayList<Student> lStudentenVanKlas = lKlas.getStudenten();	// medestudenten opzoeken
 		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 		

@@ -1,0 +1,167 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../core-icon-button/core-icon-button.html">
+<link rel="import" href="./calendar-day-base.html">
+<script src="../../moment/min/moment.min.js"></script>
+
+<polymer-element name="day-box" attributes="curDate" extends="calendar-day-base">
+	<template>
+		<style>
+			.event {
+				background-color: #ffff99;
+				color: black;
+				overflow: hidden;
+			}
+		</style>
+		<div>{{date | formatDate}}</div>
+		<template repeat="{{event in myEvents}}">
+			<div class="event"><b>{{event.title}}</b>({{event | formatEventStart}})</div>
+		</template>
+	</template>
+	<script>
+		Polymer({
+			created: function() {
+			},
+			// Set the dayBox's class for ordinary, today, & current calendar date
+			classFor: function(curDate) {
+				var cl = 'dayBox ';
+				if (this.date.isSame(moment(), 'd'))
+					cl += ' dayBoxToday';
+				if (this.date.isSame(curDate)) 
+					cl += ' dayBoxCurrent';
+				return cl;
+			},
+			formatDate: function(date) {
+				if (date) return date.date();
+			},
+			formatEventStart: function(event) {
+				return event.start.format('h:mm');
+			},
+			curDateChanged: function(oldVal, newVal) {
+				if (!oldVal) return;
+				if (!oldVal.isSame(newVal, 'M')) {
+					this.eventsChanged();
+				}
+			}
+
+		});
+	</script>
+</polymer-element>
+
+
+<polymer-element name="calendar-month" attributes="curDate events" on-day-selected="{{daySelected}}" vertical layout>
+	<template>
+		<style> 
+			:host {
+				display: block;
+				height: 100%;
+			}
+			.dayBox {
+				border: solid black 1px;
+				background-color: white;
+				color: black;
+			}	
+			.dayBoxToday {
+				background-color: darkgrey;
+				color: white;
+			}
+			.dayBoxCurrent {
+				border: 2px solid black;
+			}
+		</style>
+		<template repeat="{{week in weeksToDisplay(curDate)}}">
+			<div horizontal layout flex>
+				<template repeat="{{day in weekDays}}">
+					<!--day box-->
+					<template bind="{{day + week * 7 as dayIdx}}">
+						<day-box flex id="dayBox{{dayIdx}}" class="{{classFor(curDate, week, day)}}" date="{{dates[dayIdx]}}" curDate="{{curDate}}" on-tap="{{dayBoxTapped}}" events="{{events}}">
+
+						</day-box>
+					</template>
+				</template>
+			</div>
+		</template>
+	</template>
+	<script>
+		// The calendar will display at most 6 weeks at a time.
+		var MAX_WEEKS = 6;
+		Polymer({
+			created: function() {
+				// Convert curDate to moment if needed and set to 12:00 AM
+				// Defaults to now
+				this.curDate = this.curDate ? moment(this.curDate) : moment();
+				this.weekDays = [0,1,2,3,4,5,6];
+				/* The array of dates in the calendar is flat because that's what
+					 Poylmer binding supports at the moment. 
+				*/
+				this.dates = new Array(MAX_WEEKS * 7);
+			},
+			firstDateInWeek: function(week) {
+				var monthFirstDay = moment(this.curDate).startOf('month');
+				return moment(monthFirstDay).startOf('week').add(week, 'week');
+			},
+			get firstDateInCalendar() {
+				return moment(this.curDate).startOf('month').startOf('week');
+			},
+			get lastDateInCalendar() {
+				return moment(this.curDate).endOf('month').endOf('week');
+			},
+			weeksToDisplay: function(date) {
+				var nw = this.lastDateInCalendar.diff(this.firstDateInCalendar, 'weeks') + 1;
+				return Object.keys(new Int8Array(nw)).map(Number);
+			},
+			dayBoxForWeekDay: function(week, day) {
+				if (week < 0 || week >= MAX_WEEKS || day < 0 || day > 6)
+					return;
+				return this.shadowRoot.querySelector('#dayBox' + (day + 7 * week));
+			},
+			dayBoxForDate: function(date) {
+				var refDate = moment(date).startOf('day');
+				if (refDate < this.firstDateInCalendar || refDate > this.lastDateInCalendar)
+					return;
+				var week = Math.floor(refDate.diff(this.firstDateInCalendar, 'days') / 7);
+				if (week >= MAX_WEEKS) return null;
+				var day = Math.floor(refDate.diff(this.firstDateInWeek(week), 'd'));
+				return this.dayBoxForWeekDay(week, day);
+			},
+			dateForWeekDay: function(week, day) {
+				return this.firstDateInWeek(week).add(day, 'd');
+			},
+			curDateChanged: function(oldDate, newDate) {
+				// Ensure that curDate is a moment object
+				if (!moment.isMoment(this.curDate))
+					this.curDate = moment(this.curDate);
+				this.async(function() {
+					for (var w = 0; w < MAX_WEEKS; w++) {
+						for (var d = 0; d < 7; d++) {
+							this.dates[w*7 + d] = this.dateForWeekDay(w, d);
+						}
+					}
+				});
+			},
+			dayBoxTapped: function(event, day, sender) {
+				this.curDate = moment(sender.date);
+			},
+			formatMonth: function(date) {
+				return moment(date).format('MMM').toUpperCase();
+			},
+			classFor: function(curDate, week, day) {
+				var dayDate = this.dateForWeekDay(week, day);
+				var cl = 'dayBox ';
+				if (dayDate.isSame(moment(), 'd'))
+					cl += ' dayBoxToday';
+				if (dayDate.isSame(curDate)) 
+					cl += ' dayBoxCurrent';
+				return cl;
+			},	
+			eventsForDate: function(events, date) {
+				console.log('eventsFor called');
+				var ar = [];
+				for (var i = 0; i < events.length; i++) {
+					if (events[i].start.isSame(date, 'd')) {
+						ar.push(events[i]);
+					}
+				}
+			}
+		});
+	</script>
+</polymer-element>
