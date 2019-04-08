@@ -12,7 +12,7 @@ import model.persoon.Docent;
 
 public class Rooster {
 	private ArrayList<les> Lessen = new ArrayList<les>();
-	
+	PrIS infoSysteem = new PrIS();
 	public Rooster() {
 		
 	}
@@ -42,7 +42,7 @@ public class Rooster {
 	
 	public ArrayList<les> getLessenDocent(Docent docent) {
 		ArrayList<les> lessenDocent = new ArrayList<les>();
-		
+		infoSysteem.vulLessen(Lessen);
 		for (les les : Lessen) {
 			Docent lesGevendeDocent = (Docent)PrIS.returnLessen().get(4);
 			if (lesGevendeDocent.equals(docent)) {

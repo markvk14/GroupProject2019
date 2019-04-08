@@ -3,7 +3,7 @@ import java.util.Calendar;
 import model.persoon.Student;
 import java.util.ArrayList;
 
-public class les {
+public class Lessen {
 	private String Datum;
 	private String Starttijd;
 	private String Eindtijd;
@@ -12,7 +12,7 @@ public class les {
 	private String Groep;
 	private ArrayList<Student> Zieken;
 	
-	public les(String D, String ST, String ET, String Cc, String dc, String g){
+	public Lessen(String D, String ST, String ET, String Cc, String dc, String g){
 		Datum = D;
 		Starttijd = ST;
 		Eindtijd = ET;
@@ -40,9 +40,5 @@ public class les {
 	}
 	public String returnCursuscode() {
 		return Cursuscode;
-	}
-	public String getDocenten() {
-		String[] docent = Docenten.split("@");
-		return docent[0];
 	}
 }

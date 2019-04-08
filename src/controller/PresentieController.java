@@ -35,16 +35,16 @@ public class PresentieController implements Handler {
 		}
 	}
 	
-	public void ophalenPresentie(Conversation conversation) {
+	private void ophalenPresentie(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		Les lessen = informatieSysteem.getles;
+		les lessen = informatieSysteem.getles;
 	}
 	
-	public void opslaanPresentie(Conversation conversation) {
+	private void opslaanPresentie(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 	}
 	
-	public void opslaanPersoon(Conversation concersation) {
+	private void opslaanPersoon(Conversation concersation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 	}
 }
