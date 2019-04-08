@@ -62,4 +62,8 @@ public class les {
 	public String returnCursuscode() {
 		return Cursuscode;
 	}
+	public String getDocenten() {
+		String[] docent = Docenten.split("@");
+		return docent[0];
+	}
 }

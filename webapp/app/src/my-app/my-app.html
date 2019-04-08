@@ -151,6 +151,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Inloggen</span>
           </a>
 
+          <a name="rooster" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Rooster</span>
+          </a>
+
           <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Uitloggen</span>
@@ -219,6 +224,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               	   element$="my-login">
             <paper-material elevation="1" style="max-width: 380px;">'
               <my-login username="{{_username}}" rol="{{_rol}}" ></my-login>
+            </paper-material>
+          </section>
+
+          <section page-name="rooster"
+                   title="ROOSTER"
+                   element$="my-rooster">
+                   <paper-material elevation="1">
+                    <my-rooster
+                      r_visible="[[_are_strings_equal(_ar_page, 'rooster')]]"
+                      r_rol="{{_rol}}"
+                      r_username="{{_username}}"
+                      r_locatie="{{_locatie}}"
+                      r_start_tijd="{{_start_tijd}}"
+                      r_datum="{{_datum}}">
+                    </my-rooster>
+                  </paper-material>
+          </section>
+
+          <section name="presentie"
+          		   title="PRESENTIE"
+          		   element$="my-presentie">
+          	<paper-material elevation="1">
+          		<my-presentie
+                	p_visible="[[_are_strings_equal(_ar_page, 'presentie')]]"
+                	p_rol="{{_rol}}"
+                	p_username="{{_username}}"
+                	p_datum="{{_datum}}"
+                	p_start_tijd="{{_start_tijd}}"
+                	p_locatie="{{_locatie}}">
+                </my-presentie>
+          	</paper-material>
+          </section>
+          
+          <section name="absentie"
+                   title="ABSENTIE"
+                   element$="my-absentie">
+            <paper-material elevation="1">
+              <my-absentie
+                r_visible="[[_are_strings_equal(_ar_page, 'absentie')]]"
+                r_rol="{{_rol}}"
+                r_username="{{_username}}"
+                r_locatie="{{_locatie}}"
+                r_start_tijd="{{_start_tijd}}"
+                r_datum="{{_datum}}">
+              </my-absentie>
             </paper-material>
           </section>
 
