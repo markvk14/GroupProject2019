@@ -44,14 +44,14 @@ public class Student extends Persoon {
 	@SuppressWarnings("null")
 	public ArrayList<les> getLessen() {
 		PrIS infoSysteem = new PrIS();
-		ArrayList<les> eigenLessen = null;
-		ArrayList<les> alleLessen = infoSysteem.returnLessen();
-		for (int i = 0; i < alleLessen.size(); i++) {
-			String[] groepCodes = alleLessen.get(i).returnKlas().split("-");
-			if (groepCodes[2] == groepId) {
-				eigenLessen.add(alleLessen.get(i));
-		}
-		}
+		ArrayList<les> eigenLessen = new ArrayList<les>();
+		ArrayList<les> alleLessen = new ArrayList<les>();
+		alleLessen = infoSysteem.returnLessen();
+		for (les l : alleLessen) {
+			if (l.returnKlas().contains(groepId) == true) {
+				eigenLessen.add(l);
+			}
+			}
 		return eigenLessen;
 	}
 }
