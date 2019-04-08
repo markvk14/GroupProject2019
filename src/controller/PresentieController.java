@@ -37,14 +37,19 @@ public class PresentieController implements Handler {
 	
 	public void ophalenPresentie(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		Les lessen = informatieSysteem.getles;
+		ArrayList<les> lessen = null;
+		informatieSysteem.vulLessen(lessen);
+
+		for(les lles : lessen) {
+			
+		}
 	}
 	
 	public void opslaanPresentie(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 	}
 	
-	public void opslaanPersoon(Conversation concersation) {
+	public void opslaanPersoon(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 	}
 }

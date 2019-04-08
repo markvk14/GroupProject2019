@@ -27,11 +27,31 @@ public class les {
 	public ArrayList<Absentie> returnZieken(){
 		return Zieken;
 	}
+	
+	@SuppressWarnings("null")
+	public String[] returnZiekenString() {
+		int i = 0;
+		String[] stringZieken = null;
+		if (Zieken.size() > 0) {
+			for (Absentie a : Zieken) {
+				stringZieken[i] = a.getPersoon().getVolledigeNaam();
+				i++;
+			}
+			return stringZieken;
+		}
+		else {return null;}
+	}
 	public void removeZieke(Absentie a) {
 		Zieken.remove(a);
 	}
-	public String returnLes() {
-		String Les = Datum+","+Starttijd+","+Eindtijd+","+Cursuscode+","+Docenten+","+Groep;
+	public String[] returnLes() {
+		String[] Les = null;
+		Les[0] = Datum;
+		Les[1] = Starttijd;
+		Les[2] = Eindtijd;
+		Les[3] = Cursuscode;
+		Les[4] = Docenten;
+		Les[5] = Groep;
 		return Les;
 		
 		

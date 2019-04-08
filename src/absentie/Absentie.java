@@ -27,6 +27,7 @@ public String returnAbsentie() {
 	return s;
 }
 
+
 public String getReden() { return Reden; }
 public String getType() { return Type; }
 public Persoon getPersoon() { return Absente; }

@@ -29,6 +29,10 @@ public abstract class Persoon {
 	public String getVoornaam() {
 		return this.voornaam;
 	}
+	
+	public String getVolledigeNaam() {
+		return this.voornaam + " " + this.achternaam;
+	}
 
 	private String getAchternaam() {
 		return this.achternaam;

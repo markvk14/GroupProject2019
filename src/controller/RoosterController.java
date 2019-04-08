@@ -25,35 +25,34 @@ public class RoosterController implements Handler {
 	
 	public void handle(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/rooster/ophalen/klas")) {
-			ophalenKlas(conversation);
+			ophalenKlas(conversation, null);
 		} else if (conversation.getRequestedURI().startsWith("/rooster/ophalen/docent")) {
 			ophalenDocent(conversation);
-		} else if (conversation.getRequestedURI().startsWith("/rooster/ophalen")) {
-			ophalenAlles(conversation);
-		}
+		} 
 	}
 	
-	private void ophalenKlas(Conversation conversation) {
+	private void ophalenKlas(Conversation conversation, Student StudentZelf) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		Klas klas = informatieSysteem.getKlasVanStudent(lStudentZelf);	// klas van de student opzoeken
-		String gebruikernaam = lJasonobjectIn.getString("username");
-		
+		Klas klas = informatieSysteem.getKlasVanStudent(StudentZelf);	// klas van de student opzoeken
+		String gebruikernaam = lJsonObjectIn.getString("username");
+		PrIS infoSysteem = new PrIS();
+		ArrayList<les> pLessen = null;
+		infoSysteem.vulLessen(pLessen);
 		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 		
 		for (les lles : pLessen) {									        // met daarin voor elke medestudent een JSON-object... 																			// behalve de student zelf...
 			JsonObjectBuilder lJsonObjectBuilderVoorLes = Json.createObjectBuilder();
-
+			String[] lesInfo = lles.returnLes();
 			
 			
 			lJsonObjectBuilderVoorLes
-				.add("datum", datum)
-				.add("start_tijd", startTijdVanLesString)
-				.add("end_tijd", eindTijdVanLesString)
-				.add("cursus", vakVanLes)
-				.add("leraar", gebruikersNaamVanDocent)
-				.add("locatie", locatieVanLes)
-				.add("klascode", klasCodeVanLes);					     
+				.add("datum", lesInfo[0])
+				.add("start_tijd", lesInfo[1])
+				.add("end_tijd", lesInfo[2])
+				.add("cursus", lesInfo[3])
+				.add("leraar", lesInfo[4])
+				.add("klascode", lesInfo[5]);					     
 			  
 			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorLes);													//voeg het JsonObject aan het array toe				     
 			}
@@ -62,11 +61,9 @@ public class RoosterController implements Handler {
 		conversation.sendJSONMessage(lJsonOutStr);																				// string gaat terug naar de Polymer-GUI!
 	}
 	
-	private void ophalenDocent(Conversation caoversation) {
+	private void ophalenDocent(Conversation conversation) {
 		
 	}
 	
-	private void ophalenAlles(Conversation conversation) {
-		
-	}
+
 }
