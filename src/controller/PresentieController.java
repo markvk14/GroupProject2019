@@ -34,10 +34,9 @@ public class PresentieController implements Handler {
 			opslaanPersoon(conversation);
 		}
 	}
-
+	@SuppressWarnings("null")
 	public void ophalenPresentie(Conversation conversation) {
 		JsonObjectBuilder lJsonObjectBuilderVoorPresentie = Json.createObjectBuilder();
-		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		ArrayList<les> lessen = null;
 		informatieSysteem.vulLessen(lessen);
 		int i = 0;

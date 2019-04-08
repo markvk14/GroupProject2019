@@ -1,8 +1,6 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -11,7 +9,6 @@ import javax.json.JsonObjectBuilder;
 import model.PrIS;
 import model.klas.Klas;
 import model.les.les;
-import model.persoon.Docent;
 import model.persoon.Student;
 import server.Conversation;
 import server.Handler;
@@ -32,9 +29,6 @@ public class RoosterController implements Handler {
 	}
 	@SuppressWarnings("null")
 	private void ophalenKlas(Conversation conversation, Student StudentZelf) {
-		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		Klas klas = informatieSysteem.getKlasVanStudent(StudentZelf);	// klas van de student opzoeken
-		String gebruikernaam = lJsonObjectIn.getString("username");
 		PrIS infoSysteem = new PrIS();
 		ArrayList<les> pLessen = null;
 		infoSysteem.vulLessen(pLessen);

@@ -183,10 +183,7 @@ public class PrIS {
 				String voornaam = element[1];
 				String tussenvoegsel = element[2];
 				String achternaam = element[3];
-				String wachtwoord = element[4];
-				if (element[4] == null) {
-					wachtwoord = "geheim";
-				}
+				String wachtwoord = "geheim";
 				
 				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, wachtwoord , gebruikersnaam, 1));
 			}
@@ -249,10 +246,7 @@ public class PrIS {
 							.toLowerCase();
 					// verwijder spaties tussen dubbele voornamen en tussen bv van der
 					gebruikersnaam = gebruikersnaam.replace(" ", "");
-					String wachtwoord = element[4];
-					if (element[4] == null) {
-						wachtwoord = "geheim";
-					}
+					String wachtwoord = "geheim";
 					String lStudentNrString = element[0];
 					int lStudentNr = Integer.parseInt(lStudentNrString);
 					// Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
@@ -287,10 +281,8 @@ public class PrIS {
 	}
 	public ArrayList<les> vulLessen(ArrayList<les> pLessen) {
 		String csvFile = "././CSV/rooster.csv";
-		String csvSplitBy = ",";
 		BufferedReader br = null;
 		String line = "";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
