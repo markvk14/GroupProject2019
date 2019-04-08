@@ -30,7 +30,7 @@ public class RoosterController implements Handler {
 			ophalenDocent(conversation);
 		} 
 	}
-	
+	@SuppressWarnings("null")
 	private void ophalenKlas(Conversation conversation, Student StudentZelf) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		Klas klas = informatieSysteem.getKlasVanStudent(StudentZelf);	// klas van de student opzoeken
@@ -38,7 +38,7 @@ public class RoosterController implements Handler {
 		PrIS infoSysteem = new PrIS();
 		ArrayList<les> pLessen = null;
 		infoSysteem.vulLessen(pLessen);
-		
+	
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 		
 		for (les lles : pLessen) {									        // met daarin voor elke medestudent een JSON-object... 																			// behalve de student zelf...

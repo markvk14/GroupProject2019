@@ -36,13 +36,26 @@ public class PresentieController implements Handler {
 	}
 	
 	public void ophalenPresentie(Conversation conversation) {
+		JsonObjectBuilder lJsonObjectBuilderVoorPresentie = Json.createObjectBuilder();
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		ArrayList<les> lessen = null;
 		informatieSysteem.vulLessen(lessen);
-
+		int i = 0;
 		for(les lles : lessen) {
-			
+			String[] zieken = lles.returnZiekenString();
+			if (zieken != null) {
+				for (String zieke : zieken) {
+					String Index = "zieke" + i;
+					lJsonObjectBuilderVoorPresentie.add(Index, zieke);
+				}
+			}
+			else { conversation.sendJSONMessage(null);}
 		}
+		
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
+		lJsonArrayBuilder.add(lJsonObjectBuilderVoorPresentie);
+		String lJsonOutStr = lJsonArrayBuilder.build().toString();
+		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
 	public void opslaanPresentie(Conversation conversation) {
