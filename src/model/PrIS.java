@@ -29,7 +29,7 @@ public class PrIS {
 	 *
 	 * De klasse PrIS (PresentieInformatieSysteem) heeft nu een meervoudige
 	 * associatie met de klassen Docent, Student, Vakken en Klassen Uiteraard kan
-	 * dit nog veel verder uitgebreid en aangepast worden!
+	 * dit nog veel verder uitgebreid en aangepast worden!K
 	 *
 	 * De klasse fungeert min of meer als ingangspunt voor het domeinmodel. Op dit
 	 * moment zijn de volgende methoden aanroepbaar:
@@ -49,6 +49,9 @@ public class PrIS {
 		deStudenten = new ArrayList<Student>();
 		deKlassen = new ArrayList<Klas>(); // Inladen klassen
 		deLessen = new ArrayList<les>();
+		vulKlassen(deKlassen);
+		vulStudenten(deStudenten, deKlassen);
+		vulDocenten(deDocenten);
 
 
 	} // Einde Pris constructor
@@ -109,8 +112,9 @@ public class PrIS {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (d.komtWachtwoordOvereen(wachtwoord)) {
 					isIngelogd = true;
-					return "docent";
+					return "docent ingelogd";
 				}
+				return "fout wachtwoord";
 			}
 		}
 
@@ -118,12 +122,14 @@ public class PrIS {
 			if (s.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (s.komtWachtwoordOvereen(wachtwoord)) {
 					isIngelogd = true;
-					return "student";
+					return "student ingelogd";
 				}
+				return "fout wachtwoord";
 			}
+			return "gebruikersnaam niet gevonden";
 		}
 
-		return "undefined";
+		return "als je deze error ziet is er iets flink mis";
 	}
 	
 	private String passwordChange(String wachtwoord, String nieuwWachtwoord, String herhaalNieuwWachtwoord) {
