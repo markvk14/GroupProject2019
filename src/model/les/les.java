@@ -1,5 +1,6 @@
 package model.les;
 import java.util.Calendar;
+import absentie.Absentie;
 import model.persoon.Student;
 import java.util.ArrayList;
 
@@ -10,7 +11,7 @@ public class les {
 	private String Cursuscode;
 	private String Docenten;
 	private String Groep;
-	private ArrayList<Student> Zieken;
+	private ArrayList<Absentie> Zieken;
 	
 	public les(String D, String ST, String ET, String Cc, String dc, String g){
 		Datum = D;
@@ -20,14 +21,14 @@ public class les {
 		Docenten = dc;
 		Groep = g;
 	}
-	public void addZieke(Student student) {
-		Zieken.add(student);
+	public void addZieke(Absentie a) {
+		Zieken.add(a);
 	}
-	public ArrayList<Student> returnZieken(){
+	public ArrayList<Absentie> returnZieken(){
 		return Zieken;
 	}
-	public void removeZieke(Student student) {
-		Zieken.remove(student);
+	public void removeZieke(Absentie a) {
+		Zieken.remove(a);
 	}
 	public String returnLes() {
 		String Les = Datum+","+Starttijd+","+Eindtijd+","+Cursuscode+","+Docenten+","+Groep;
