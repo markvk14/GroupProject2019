@@ -5,6 +5,7 @@ import model.persoon.Student;
 import java.util.ArrayList;
 
 public class les {
+	private String Faculteit;
 	private String Datum;
 	private String Starttijd;
 	private String Eindtijd;
@@ -13,7 +14,8 @@ public class les {
 	private String Groep;
 	private ArrayList<Absentie> Zieken;
 	
-	public les(String D, String ST, String ET, String Cc, String dc, String g){
+	public les(String F, String D, String ST, String ET, String Cc, String dc, String g){
+		Faculteit = F;
 		Datum = D;
 		Starttijd = ST;
 		Eindtijd = ET;
@@ -45,13 +47,14 @@ public class les {
 		Zieken.remove(a);
 	}
 	public String[] returnLes() {
-		String[] Les = null;
-		Les[0] = Datum;
-		Les[1] = Starttijd;
-		Les[2] = Eindtijd;
-		Les[3] = Cursuscode;
-		Les[4] = Docenten;
-		Les[5] = Groep;
+		String[] Les = new String[7];
+		Les[0] = Faculteit;
+		Les[1] = Datum;
+		Les[2] = Starttijd;
+		Les[3] = Eindtijd;
+		Les[4] = Cursuscode;
+		Les[5] = Docenten;
+		Les[6] = Groep;
 		return Les;
 		
 		

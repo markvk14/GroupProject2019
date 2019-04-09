@@ -37,9 +37,7 @@ public class Application {
 		MedestudentenController medestudentenController = new MedestudentenController(infoSysteem);
 		RoosterController roosterController = new RoosterController(infoSysteem);
 		server.registerHandler("/systeemdatum/lesinfo", systeemDatumController);
-
 		server.registerHandler("/login", loginController);
-
 		server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
 		server.registerHandler("/student/medestudenten/opslaan", medestudentenController);
 		server.registerHandler("/rooster/ophalen/klas", roosterController);

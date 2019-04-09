@@ -299,13 +299,14 @@ public class PrIS {
 			    for(int i = 0;i<element.length;i++) {
 			        element[i] = element[i].replaceAll("\"", "");
 			    }
+			    String Faculteit = element[25];
 		        String Datum = element[9];
 		        String Starttijd = element[11];
 		        String Eindtijd = element[17];
 		        String Groep = element[27];
 		        String Docenten = element[23];
 		        String Cursuscode = element[3];
-		        pLessen.add(new les(Datum, Starttijd, Eindtijd, Cursuscode, Docenten, Groep));
+		        pLessen.add(new les(Faculteit, Datum, Starttijd, Eindtijd, Cursuscode, Docenten, Groep));
 			}
 			pLessen.remove(0);
 			
