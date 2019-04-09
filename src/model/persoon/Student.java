@@ -41,7 +41,6 @@ public class Student extends Persoon {
 	}
 
 
-	@SuppressWarnings("null")
 	public ArrayList<les> getLessen() {
 		PrIS infoSysteem = new PrIS();
 		ArrayList<les> eigenLessen = new ArrayList<les>();

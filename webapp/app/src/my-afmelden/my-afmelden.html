@@ -1,0 +1,248 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/core-selector/core-selector.html">
+<link rel="import" href="../../bower_components/core-a11y-keys/core-a11y-keys.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">`
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<script src="../webcomponentsjs/webcomponents-lite.js"></script>
+
+<dom-module id="my-afmelden">
+        <template>
+          <style>
+            :host {
+              display: block;
+            }
+            paper-radio-button {
+            display: block;}
+            .my-title {
+              font-size: 20px;
+              color: blue;
+              border-bottom: 1px solid red; /*#1a9fd9; */  /* a red line */
+              padding-bottom: 2px;                         /* space above the border line */
+            }
+            .toast-button {
+              text-transform: none;
+              color: white;                           /* white tekst */
+              background: #1a9fd9;                    /* kind of blue */
+              --paper-button-ink-color: #00567B;      /* kind of dark blue */
+            }
+            .my-detail {
+              font-size: 12px;
+              margin-bottom: 0px;
+              margin-left: 10px;
+            }
+            .my-type {
+                position:absolute;
+              left:300px;
+            }
+            .my-input {
+                width:140px;
+            }
+            .my-bg {
+               background: green;
+            }
+            .my-line {
+               display: flex;
+               allign-items: left;
+            }
+            .my-label {
+               width: 200px;                     /* default width, but can become smaller and wraps two to lines */
+               min-width: 80px;                /* width, but can not become smaller after wrapping */
+            }
+            .my-label2 {
+              min-width: 20px;                 /* default width, but can not become smaller, nor wrapping */
+            }
+            .my-value {
+              width: 400px;                      /* default width, but can become smaller and wraps two to lines */
+              min-width: 180px;               /* width, but can not become smaller after wrapping */
+            }
+            .my-button {
+              position:absolute;
+              bottom:4px;
+              right:0;
+            }
+            .my-button2 {
+              position:absolute;
+              bottom:4px;
+              right:100px;
+            }
+          </style>
+      
+          <div class="my-title">Afmelden</div>
+          
+          <paper-toast
+            id="toast_gelukt_oproep"
+            duration="0"
+            text="Gegevens zijn opgeslagen!">
+              <paper-button on-click="_toast_clicked" class="toast-button">Terug naar home page</paper-button>
+          </paper-toast>
+          
+          <paper-toast
+            id="toast_mislukt_oproep1"
+            duration="0"
+            text="Vul een reden in!">
+              <paper-button on-click="_toast_clicked1" class="toast-button">Sluiten</paper-button>
+          </paper-toast>
+          
+          <paper-toast
+            id="toast_mislukt_oproep2"
+            duration="0"
+            text="Vink een status aan!">
+              <paper-button on-click="_toast_clicked2" class="toast-button">Sluiten</paper-button>
+          </paper-toast>
+          
+          <paper-toast
+            id="toast_mislukt_oproep3"
+            duration="0"
+            text="Vul de lesgegevens in!">
+              <paper-button on-click="_toast_clicked3" class="toast-button">Sluiten</paper-button>
+          </paper-toast>
+      
+          <paper-input-container always-float-label>
+            <p>Reden</p>
+            <input placeholder="Type hier je reden" value="{{reden::input}}" rows="3"></input>
+          </paper-input-container>
+          </p>
+            <paper-button
+            id="annuleren_button"
+            class="my-button"
+            on-click="_annuleer"
+            raised>
+              Annuleer
+          </paper-button>
+          <paper-button
+            id="verzenden_button"
+            class="my-button2"
+            on-click="_verzenden"
+            raised>
+              Verzenden
+          </paper-button>
+          
+          <iron-ajax
+            id="ajax_afmelding_ophalen"
+            method="POST"
+            url="/persoon/presentie/opslaan"
+            handle-as="json"
+            on-response="_afmelding_opslaan_response_handler">
+          </iron-ajax>
+      
+        </template>
+      
+        <script>
+            Polymer({
+               is: 'my-afmelden',
+          
+               properties: {
+                   a_username: {
+                       type: String,
+                       notify: true,
+                   },
+                   radioSelected: {
+                       type: String,
+                   },
+                   a_datum: {
+                       type: String,
+                       notify: true
+                   },
+                   a_start_tijd:{
+                     type: String,
+                     notify: true
+                   },
+                   a_locatie: {
+                       type: String,
+                     notify: true
+                   },
+                   a_visible: {
+                  type: Boolean,                                      /* true when element is the active visible item */
+                  value: false,
+                  observer: '_initializing',                          /* wordt ook aangeroepen bijwisseling van true naar false.
+                                                                         //regel in de functie dat er niets gebeurd
+                                                                        // als a_visible false is */
+                },
+                   
+                   
+                   
+               },
+               
+               _ding: function(){
+                   console.log("datum is nu" + this.a_datum);
+               },
+               
+               _initializing: function(){
+                   //console.log(a_datum + a_locatie);
+               },
+               
+               _verzenden:function() {
+                if (this.reden == null) {
+                    var lToast = this.$.toast_mislukt_oproep1;        // meldt ongeldige aanroep
+                  lToast.open(); 
+                  }
+              else {
+                  this._afmelding_opslaan_request_handler();
+                  var lToast = this.$.toast_gelukt_oproep;        // meldt ongeldige aanroep
+                  lToast.open();                      	
+                  };
+                            
+               },
+               
+               _afmelding_opslaan_request_handler: function(){
+                   console.log("_presentie_ophalen_request_handler user="+this.a_username);
+                   this.$.ajax_afmelding_ophalen.contentType="application/json";
+                   this.$.ajax_afmelding_ophalen.body={
+                         "username": this.a_username,
+                         "non-appearance":{
+                         "date":this.a_datum,
+                           "start-time":this.a_start_tijd,
+                           "location":this.a_locatie,
+                           "type":"afgemeld",
+                           "reason":this.reden}
+                   }
+                   console.log(this.datum)
+                   console.log(this.$.ajax_afmelding_ophalen.body);
+                   this.$.ajax_afmelding_ophalen.generateRequest();
+               },
+             
+               _afmelding_opslaan_response_handler: function(request){
+                   console.log(this.a_username + " afgemeld voor een les");
+                   
+               },
+               
+               _annuleer: function() {
+                   var lApp = document.querySelector('my-app');
+                   var lAppRouter = lApp.$.approuter;
+                   lAppRouter.data={page: ""};
+                  },
+                  
+            _toast_clicked: function(e) {
+               var lToast = this.$.toast_gelukt_oproep;        // meldt ongeldige aanroep
+               lToast.toggle();
+               this._go_home();
+              },
+            _toast_clicked1: function(e) {
+               var lToast = this.$.toast_mislukt_oproep1;        // meldt ongeldige aanroep
+               lToast.toggle();
+              },
+            _toast_clicked2: function(e) {
+               var lToast = this.$.toast_mislukt_oproep2;        // meldt ongeldige aanroep
+               lToast.toggle();
+              },
+            _toast_clicked3: function(e) {
+               var lToast = this.$.toast_mislukt_oproep3;        // meldt ongeldige aanroep
+               lToast.toggle();
+              },
+               _go_home: function() {
+                   var lApp = document.querySelector('my-app');
+                   var lAppRouter = lApp.$.approuter;            
+                   lAppRouter.data={page: ""};                   
+                 },
+          
+          
+             });
+        </script>
+      </dom-module>
+      

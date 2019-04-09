@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="import" href="../../bower_components/polymer/polymer.html">
+    <script src="../../bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import"href="../../bower_components/vaadin-grid/vaadin-grid.html">
+    <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+</head>
+
+<body>
+    <dom-module id="my-rooster">
+        <template>
+            <style>
+         	:host {
+            display: none;
+          }
+         </style>
+         <h1>Rooster</h1>
+         <vaadin-grid>
+             <table>
+                 <colgroup>
+                    <col name="datum" sortable sort-direction="asc" flex>
+                    <col name="starttijd" flex>
+                    <col name="eindtijd" flex>
+                    <col name="cursuscode" flex>
+                    <col name="docenten" flex>
+                    <col name="Groep" flex>
+                    <col name="presentie" flex>
+                    <col name="afmelden" flex>
+                </colgroup>
+                <thread>
+                    <tr>
+                        <th>datum</th>
+                        <th>starttijd</th>
+                        <th>eindtijd</th>
+                        <th>les</th>
+                        <th>docent</th>
+                        <th>locatie</th>
+                        <th>klas</th>
+                        <th verborgen$="[[_are_strings_equal(r_rol, 'student')]]"><paper-icon-button verborgen%="[[_are_strings_equal(r_rol, 'student')]]" id="presentie" icon="social" on-click="presentie"></th>
+                        <th verborgen$="[[_are_strings_equal(r_rol, 'student')]]"><paper-icon-button verborgen%="[[_are_strings_equal(r_rol, 'undifined')]]" id="afmeldenknop" icon="social" on-click="afmeldenknop"></th>
+                    </tr>
+                </template>
+                </table>
+                </thread>
+         </vaadin-grid>
+         <iron-ajax>
+            id=""
+            method="POST"
+            url=""
+            handle-as"json"
+            on-response=""
+        </iron-ajax>
+        </template>
+
+
+    <script>
+            (function(){
+                  'use strict';
+                /* _xxxx private              : geen external data binding      - geen notify
+                   _r_xx private constant     : geen external binding, constant - geen notify
+                   r_xx  public constant      : one way external databinding [[r_xx]] - geen notify nodig
+                   xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+                */
+                Polymer({ is: "my-rooster"});,
+
+                _rooster_ophalen_klas_request_handler: function(){
+      	        	console.log("klas ophalen(request) rol" + this.r_rol + "username:" + this.r_username);
+      	        	this.$.ajax_rooster_ophalen_klas.contentType="rooster/ophalen/klas";
+      	        	this.$.ajax_rooster_ophalen_klas.body={
+      	        		"username": this.r_username,
+      	        	}
+      	        	this.$.ajax_rooster_ophalen_klas.generateRequest();
+      	        },
+
+    </script>
+</dom-module>
+
+</body>
+</html>

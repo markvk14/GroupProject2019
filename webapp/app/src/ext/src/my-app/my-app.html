@@ -117,8 +117,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
     <!-- Main Toolbar -->
-    <app-drawer-layout>
- 	  <app-drawer slot="drawer">
+    <app-drawer-layout  fullbleed>
+ 	  <app-drawer id="drawer">
  	    <!--  _ar_page bepaald welk menu geselecteerd is.
  			  het menu dat de gebruiker klikt veroorzaakt een andere url
  			  deze url wordt door <app-location> en <app-route> omgezet in variabelen
@@ -140,10 +140,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Home</span>
           </a>
 
-          <!-- altijd beschikbaar -->
-          <a name="systeem_instellen_systeemdatum" href$="[[_c_baseURL]]systeem_instellen_systeemdatum" >
+          <!-- <a name="calendar" href$="[[_c_baseURL]]calendar">
+            <iron-icon icon="home"></iron-icon>
+            <span>Calendar</span>
+          </a> -->
+
+          <!-- altijd beschikbaar--------------------------------------------------------- -->
+          <!-- <a name="systeem_instellen_systeemdatum" href$="[[_c_baseURL]]systeem/instellen_systeemdatum" >
             <iron-icon icon="icons:today"></iron-icon>
             <span>(test) Instellen systeemdatum</span>
+          </a> -->
+
+          <a name="absentie" href$="[[_c_baseURL]]absentie" verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
+            <iron-icon icon="event"></iron-icon>
+            <span>Rooster</span>
           </a>
 
           <a name="login" href$="[[_c_baseURL]]login"  verborgen$="[[!_are_strings_equal(_rol, 'undefined')]]">
@@ -151,20 +161,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Inloggen</span>
           </a>
 
-          <a name="rooster" href$="[[_c_baseURL]]rooster"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
-            <iron-icon icon="account-box"></iron-icon>
-            <span>Rooster</span>
-          </a>
-
           <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Uitloggen</span>
           </a>
 
-          <!-- beschikbaar voor docent -->
+          <!-- beschikbaar voor docent---------------------------------------------------- -->
+          
 
-          <!-- beschikbaar voor student -->
-          <a name="student_medestudenten" href$="[[_c_baseURL]]student_medestudenten"  verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
+          <!-- beschikbaar voor student--------------------------------------------------- -->
+          <a name="student_medestudenten" href$="[[_c_baseURL]]student/medestudenten"  verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
           </a>
@@ -180,8 +186,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-toolbar>
 
       <iron-pages
-        attr-for-selected="page-name"
+        attr-for-selected="name"
         selected="[[_ar_page]]"
+        selected-item="{{_ar_selected_object}}"
         fallback-selection="view404"
         role="main">
         <!-- in iron-pages kun je niet handmatig een element selecteren.
@@ -192,25 +199,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        	     en de titel via _ar_selected_object.title
         -->
 
-        <!-- sections voor iedereen -->
+        <!-- sections voor iedereen ---------------------------------------------------------------- -->
         <!-- element$="none" of weglaten van element$ geeft beide aan dat er geen polymerElement gebruikt zal gaan worden -->
-        <section page-name="home" title="HOME" element$="none">
+        <section name="home" title="HOME" element$="none">
           <paper-material elevation="1">
               <p>Demo app gebaseerd op Polymer.</p>
-              <p>Deze app past nadat je bent ingelogged het menu aan, aan de rol die gekoppeld is aan de ingeloggede user.</p>
+              <p>Deze app past nadat je bent ingeloggen het menu aan, aan de rol die gekoppeld is aan de ingeloggede user.</p>
           </paper-material>
         </section>
 
-        <section page-name="systeem_instellen_systeemdatum"
+        <section name="systeem_instellen_systeemdatum"
                  title="INSTELLEN SYSTEEMDATUM"
               	 element$="my-systeemdatum">
             <paper-material elevation="1">
-              <!--
-                c_visible="true" als deze section geselecteerd is.
+
+                <!-- c_visible="true" als deze section geselecteerd is.
                 LET OP: boolean values moeten als string doorgegeven worden,
                         vandaar de quotes rondom de function aanroep.
-                        De aanwezige literal waarde wordt met enkele quotes doorgegeven
-              -->
+                        De aanwezige literal waarde wordt met enkele quotes doorgegeven -->
+
               <my-systeemdatum
                 systeemdatumlokaal="{{_systeemdatumlokaal}}"
                 systeemdatumstandaard="{{_systeemdatumstandaard}}"
@@ -219,35 +226,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
-          <section page-name="login"
-              	   title="LOGIN"
-              	   element$="my-login">
-            <paper-material elevation="1" style="max-width: 380px;">'
-              <my-login username="{{_username}}" rol="{{_rol}}" ></my-login>
-            </paper-material>
-          </section>
-
-          <section page-name="rooster"
-                   title="ROOSTER"
-                   element$="my-rooster">
-                   <paper-material elevation="1" style="max-width: 380px;">
-                    <my-rooster
-                      r_visible="[[_are_strings_equal(_ar_page, 'rooster')]]"
-                      r_rol="{{_rol}}"
-                      r_username="{{_username}}"
-                      r_locatie="{{_locatie}}"
-                      r_start_tijd="{{_start_tijd}}"
-                      r_datum="{{_datum}}">
-                    </my-rooster>
-                  </paper-material>
+          <section name="absentie"
+              	   title="Rooster"
+              	   element$="my-absentie">
+                   <paper-material elevation="1">
+                     <my-absentie
+                     	r_visible="[[_are_strings_equal(_ar_page, 'absentie')]]"
+                     	r_rol="{{_rol}}"
+                     	r_username="{{_username}}"
+                     	r_locatie="{{_locatie}}"
+             			r_start_tijd="{{_start_tijd}}"
+             			r_datum="{{_datum}}"></my-absentie>
+                   </paper-material>
           </section>
 
           <section name="presentie"
-          		   title="PRESENTIE"
+              	   title="PRESENTIE"
+              	   element$="my-presentie">
+                   <paper-material elevation="1">
+                     <my-presentie></my-presentie>
+                   </paper-material>
+          </section>
+          
+          <section name="les_presentie"
+          		   title="LES-PRESENTIE"
           		   element$="my-presentie">
           	<paper-material elevation="1">
           		<my-presentie
-                	p_visible="[[_are_strings_equal(_ar_page, 'presentie')]]"
+                	p_visible="[[_are_strings_equal(_ar_page, 'les_presentie')]]"
                 	p_rol="{{_rol}}"
                 	p_username="{{_username}}"
                 	p_datum="{{_datum}}"
@@ -257,22 +263,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           	</paper-material>
           </section>
 
-          <section name="absentie"
-                   title="ABSENTIE"
-                   element$="my-absentie">
-            <paper-material elevation="1">
-              <my-absentie
-                r_visible="[[_are_strings_equal(_ar_page, 'absentie')]]"
-                r_rol="{{_rol}}"
-                r_username="{{_username}}"
-                r_locatie="{{_locatie}}"
-                r_start_tijd="{{_start_tijd}}"
-                r_datum="{{_datum}}">
-              </my-absentie>
+          <section name="afmelden"
+                  title="AFMELDEN"
+                  element$="my-afmelden">
+           <paper-material elevation="1">
+             <my-afmelden a_username="{{_username}}"
+             			a_visible="[[_are_strings_equal(_ar_page, 'afmelden')]]"
+             			a_locatie="{{_locatie}}"
+             			a_start_tijd="{{_start_tijd}}"
+             			a_datum="{{_datum}}">
+             </my-afmelden>
+           </paper-material>
+         </section>
+
+          <!-- <section name="calendar"
+              	   title="CALENDAR"
+              	   element$="my-calendar">
+                   <paper-material elevation="1">
+                     <my-absentie></my-absentie>
+                   </paper-material>
+          </section> -->
+
+          <section name="login"
+              	   title="LOGIN"
+              	   element$="my-login">
+            <paper-material elevation="1" style="max-width: 380px;">'
+              <my-login username="{{_username}}" rol="{{_rol}}" ></my-login>
             </paper-material>
           </section>
 
-          <section page-name="logout"
+          <section name="logout"
                    title="UITLOGGEN"
                    element="my-logout">
             <paper-material elevation="1">
@@ -283,7 +303,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- sections voor docent -->
 
  <!-- sections voor student -->
-          <section  page-name="student_medestudenten"
+          <section  name="student_medestudenten"
                     title="OVERZICHT MEDESTUDENTEN"
                     element$="my-medestudenten">
             <paper-material elevation="1">
@@ -301,14 +321,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
-          <section page-name="student_details" title="STUDENT DETAILS">
+          <section name="student_details" title="STUDENT DETAILS">
             <paper-material elevation="1">
               <h2 class="page-title">Student: [[_ar_subsubroute_data.subsubpage]]</h2>
               <div>This is [[_ar_subsubroute_data.subsubpage]]'s section</div>
             </paper-material>
           </section>
 
-          <section page-name="view404"
+          <section  name="view404"
                     title="PAGE NOT FOUND"
                     element$="my-view404">
             <paper-material elevation="1">
@@ -378,6 +398,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           _username: {
             type: String,
           },
+          _datum: {
+        	  type: String,
+        	  value: "",
+        	  notify: true,
+          },
+          _start_tijd: {
+        	  type: String,
+        	  value: "",
+        	  notify: true,
+          },
+          _locatie:{
+        	  type: String,
+        	  value: "",
+        	  notify: true,
+          }
         },  //end of properties
 
         observers: [
@@ -386,9 +421,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ],
 
         _ar_route_data_page_changed: function(pNewPage) {
-          //if (!this.$.drawer.persistent) {
-          //  this.$.drawer.close();
-          //}
+          if (!this.$.drawer.persistent) {
+            this.$.drawer.close();
+          }
           if ((pNewPage == "") || (pNewPage == undefined)){
               this._ar_page = "home";
             } else {

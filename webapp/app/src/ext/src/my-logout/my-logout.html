@@ -1,4 +1,4 @@
-g<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
@@ -10,7 +10,7 @@ g<link rel="import" href="../../bower_components/polymer/polymer.html">
       }
 
       span {
-        @apply --paper-font-body1;
+        @apply(--paper-font-body1);
       }
     </style>
 
@@ -42,7 +42,7 @@ g<link rel="import" href="../../bower_components/polymer/polymer.html">
           this.rol = "undefined";
           this._go_home();
          },
-
+        
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter

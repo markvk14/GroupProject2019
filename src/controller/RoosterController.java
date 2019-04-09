@@ -22,13 +22,12 @@ public class RoosterController implements Handler {
 	
 	public void handle(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/rooster/ophalen/klas")) {
-			ophalenKlas(conversation, null);
-		} else if (conversation.getRequestedURI().startsWith("/rooster/ophalen/docent")) {
-			ophalenDocent(conversation);
+			ophalenKlas(conversation);
+		} else { System.out.println("illegal request uri");
 		} 
 	}
 	@SuppressWarnings("null")
-	private void ophalenKlas(Conversation conversation, Student StudentZelf) {
+	private void ophalenKlas(Conversation conversation) {
 		PrIS infoSysteem = new PrIS();
 		ArrayList<les> pLessen = null;
 		infoSysteem.vulLessen(pLessen);
@@ -53,10 +52,6 @@ public class RoosterController implements Handler {
 		
 		String lJsonOutStr = lJsonArrayBuilder.build().toString();												// maak er een string van
 		conversation.sendJSONMessage(lJsonOutStr);																				// string gaat terug naar de Polymer-GUI!
-	}
-	
-	private void ophalenDocent(Conversation conversation) {
-		
 	}
 	
 

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="import" href="../../bower_components/polymer/polymer.html">
+    <script src="../../bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import"href="../../bower_components/vaadin-grid/vaadin-grid.html">
+    <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+</head>
+
+<body>
+
+    <dom-module id="my-absentie">
+
+      <template>
+         <style>
+         	.drawer-list a[verborgen] {               /* toegevoegd tov PSK               */
+                        				        /* als verborgen true is dan ..     */
+        		display: none;							/* onzichtbaar maken                */
+      		}
+
+      		col[verborgen]{
+      			display: none;
+      		}
+
+      		th[verborgen]{
+      			display: none;
+      		}
+
+      		td[verborgen]{
+      			display: none;
+      		}
+         </style>
+         <h1>Rooster</h1>
+         <vaadin-grid >
+            <table>
+              <colgroup>
+                <col name="datum" sortable sort-direction="asc" flex >
+                <col name="starttijd" flex>
+                <col name="eindtijd" flex>
+                <col name="les" flex>
+                <col name="docent" flex>
+                <col name="locatie" flex>
+                <col name="klas" flex>
+                <col name="toon lespresentie" verborgen$="[[_are_strings_equal(r_rol, 'student')]]" flex>
+                <col name="afmelden" verborgen$="[[_are_strings_equal(r_rol, 'undefined')]]" flex>
+               </colgroup>
+               <thead>
+                 <tr>
+                   <th>datum</th>
+                   <th>starttijd</th>
+                   <th>eindtijd</th>
+                   <th>les</th>
+                   <th>docent</th>
+                   <th>locatie</th>
+                   <th>klas</th>
+                   <th verborgen$="[[_are_strings_equal(r_rol, 'student')]]">toon lespresentie</th>
+                   <th verborgen$="[[_are_strings_equal(r_rol, 'undefined')]]">afmelden</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <template is="dom-repeat" items="[[lessen]]">
+                   <tr>
+                     <td>[[item.date]]</td>
+                     <td>[[item.start_time]]</td>
+                     <td>[[item.end_time]]</td>
+                     <td>[[item.course]]</td>
+                     <td>[[item.teacher]]</td>
+                     <td>[[item.location]]</td>
+                     <td>[[item.class_code]]</td>
+                     <td verborgen$="[[_are_strings_equal(r_rol, 'student')]]"><paper-icon-button verborgen$="[[_are_strings_equal(r_rol, 'student')]]" id="presentie_melden" icon="menu" on-click="presentie"></paper-icon-button></td>
+                     <td verborgen$="[[_are_strings_equal(r_rol, 'undefined')]]"><paper-icon-button verborgen$="[[_are_strings_equal(r_rol, 'undefined')]]" id="afmelden_knop" icon="menu" on-click="afmelden"></paper-icon-button></td>
+                   </tr>
+                 </template>
+               </tbody>
+             </table>
+           </vaadin-grid>
+           <iron-ajax
+		      id="ajax_rooster_ophalen_klas"
+		      method="POST"
+		      url="/rooster/ophalen/klas"
+		      handle-as="json"
+		      on-response="_rooster_ophalen_klas_response_handler">
+		   </iron-ajax>
+
+		<iron-ajax
+	      id="ajax_rooster_ophalen_docent"
+	      method="POST"
+	      url="/rooster/ophalen/docent"
+	      handle-as="json"
+	      on-response="_rooster_ophalen_docent_response_handler">
+	    </iron-ajax>
+         </template>
+       </div>
+
+
+
+  <script>
+  (function(){
+		'use strict';
+      /* _xxxx private              : geen external data binding      - geen notify
+         _r_xx private constant     : geen external binding, constant - geen notify
+         r_xx  public constant      : one way external databinding [[r_xx]] - geen notify nodig
+         xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+      */
+      Polymer({
+          is: 'my-absentie',
+          properties: {
+            lessen: {
+              type: Array,
+             },
+             r_username: {
+ 	            type: String,
+ 	           	notify: true,
+ 	         },
+ 	         r_rol:{
+ 	        	 type: String,
+ 	        	notify: true,
+ 	         },
+ 	         r_visible: {
+	            type: Boolean,                                      /* true when element is the active visible item */
+	            value: false,
+	            observer: '_initializing',                          /* wordt ook aangeroepen bijwisseling van true naar false.
+	                                                                   regel in de functie dat er niets gebeurd
+	                                                                   als r_visible false is */
+	         },
+	         r_datum: {
+	        	 type: String,
+	        	 notify: true,
+	         },
+	         r_start_tijd:{
+	        	 type: String,
+	        	 notify: true,
+	         },
+	         r_locatie: {
+	        	 type: String,
+	        	 notify: true,
+	         },
+           },
+
+          _go_home: function() {
+            var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+            var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+            lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
+                                                          // door de two way binding in <app-route> en <app-location>
+                                                          // zal ook de url echt wijzigen
+           },
+
+           _are_strings_equal: function(p_str1, p_str2) {
+     	      //console.log("_are_strings_equal: " + p_str1 + " met: " + p_str2);
+     	      return (p_str1==p_str2);
+     	    },
+
+           _initializing : function() {
+	        	if (this.r_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
+	            	if (this.r_rol=="docent") {                        // voor docenten
+	                  this._rooster_ophalen_docent_request_handler();    //    haal info op van server
+	                } else if(this.r_rol=="student"){                     //voor studenten
+	                  this._rooster_ophalen_klas_request_handler();
+	                }/* else {
+	                	var lToast = this.$.toast_invalid_aanroep;        // na handmatige url wijziging zonder login terug naar home page
+		                 lToast.open(); 									// meldt ongeldige aanroep
+	                }*/
+	        	}
+	        },
+
+	        presentie: function(e){
+	        	var model = e.model;
+	        	console.log("Presentie voor:" + model.item.date + " " + model.item.location);
+	        	this.r_datum = model.item.date;
+	        	this.r_start_tijd = model.item.start_time;
+	        	this.r_locatie = model.item.location;
+	        	this.naar_presentie();
+	        },
+
+	        naar_presentie: function(){
+	        	var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+	            var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+	            lAppRouter.data={page: "les/presentie/"};
+	        },
+
+	        afmelden: function(e){
+	        	var model = e.model;
+	        	console.log("afmelden voor:" + model.item.date + " " + model.item.location);
+				this.r_datum = model.item.date;
+	        	this.r_start_tijd = model.item.start_time;
+	        	this.r_locatie = model.item.location;
+	        	this.naar_afmelden();
+	        },
+
+	        naar_afmelden: function(){
+	        	var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+	            var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+	            lAppRouter.data={page: "afmelden"};
+	        },
+
+	        _rooster_ophalen_docent_request_handler: function(){
+	        	console.log("_rooster_ophalen_docent_request_handler rol" + this.r_rol + "username:" + this.r_username);
+	        	this.$.ajax_rooster_ophalen_docent.contentType="application/json";
+	        	this.$.ajax_rooster_ophalen_docent.body={
+	        		"username": this.r_username,
+	        	}
+	        	this.$.ajax_rooster_ophalen_docent.generateRequest();
+	        },
+
+	        _rooster_ophalen_docent_response_handler: function(request){
+	        	console.log("_rooster_ophalen_docent_response_handler aantal lessen=" + request.detail.response.length);
+	        	this.lessen = request.detail.response;
+	        },
+
+	        _rooster_ophalen_klas_request_handler: function(){
+	        	console.log("_rooster_ophalen_klas_request_handler rol" + this.r_rol);
+	        	this.$.ajax_rooster_ophalen_klas.contentType="application/json";
+	        	this.$.ajax_rooster_ophalen_klas.body={
+	        		"username": this.r_username,
+	        	}
+	        	this.$.ajax_rooster_ophalen_klas.generateRequest();
+	        },
+
+	        _rooster_ophalen_klas_response_handler: function(request){
+	        	console.log("_rooster_ophalen_klas_response_handler aantal lessen=" + request.detail.response.length);
+	        	this.lessen = request.detail.response;
+	        	console.log(this.lessen);
+	        },
+      });
+  })();
+  </script>
+    </dom-module>
+</body>
+
+</html>

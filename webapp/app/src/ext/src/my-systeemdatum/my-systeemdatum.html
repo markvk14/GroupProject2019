@@ -1,0 +1,171 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
+     op het moment dat het element in de iron-pages geselecteerd wordt
+     en ook zodra hij weer gedeselecteerd wordt.
+     Deze techniek is bruikbaar om volatile info steeds opnieuw op te halen en niet enkel eenmalig
+     bij start van de applicatie
+-->
+
+<!--  externe afhankelijkheid:
+      standaarddatumstring_to_lokaledatumstring (zie <my-app>)
+-->
+
+<dom-module id="my-systeemdatum">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .my-title {
+        font-size: 20px;
+        color: blue;
+        border-bottom: 1px solid red; /*#1a9fd9; */  /* a red line */
+        padding-bottom: 2px;                         /* space above the border line */
+      }
+      .my-detail {
+        font-size: 12px;
+        margin-bottom: 12px;                         /* space after detail lines */
+      }
+      .my-input {
+        max-width: 150px;
+      }
+      .my-line {
+         display: flex;
+         allign-items: left;
+      }
+      .my-label {
+         width: 150px;                     /* default width, but can become smaller and wraps two to lines */
+         min-width: 80px;                /* width, but can not become smaller after wrapping */
+      }
+      .my-label2 {
+        min-width: 12px;                 /* default width, but can not become smaller, nor wrapping */
+      }
+      .my-value {
+        width: 280px;                      /* default width, but can become smaller and wraps two to lines */
+        min-width: 180px;               /* width, but can not become smaller after wrapping */
+      }
+    </style>
+    <div class="my-title">De applicatie is datum gebonden. </div>
+    <div class="my-detail">
+      Zo kun je je alleen op "vandaag" ziekmelden en daarna betermelden.
+      Om dit testbaar te maken moet je kunnen "runnen" met verschillende systeemdatums.
+    </div>
+    <div class="my-detail">
+      (In productie is de systeemdatum altijd gelijk aan de werkelijke datum van vandaag.
+      Dit is bereikbaar door dit element te verwijderen of niet te activeren.)
+    </div>
+    <div class="my-detail">
+      Ook kan zowel de docent als de student browsen door de lessen.
+      Dit begint ook bij de systeemdatum.
+    </div>
+    <div class="my-detail">
+      Voor het zinvol kiezen van de systeemdatum horende bij de aanwezige (test) lessen
+      wordt de datum van de eerste en laatste les getoond.
+    </div>
+    <div class="my_vertical-elements">
+      <div class="my-line">
+        <span class="my-label">Eerste lesdatum</span>
+        <span class="my-label2">:</span>
+        <span class="my-value">[[_c_lesinfo.eerste_lesdatum_lokaal]]</span>
+      </div>
+      <div class="my-line">
+        <span class="my-label">Laatste lesdatum</span>
+        <span class="my-label2">:</span>
+        <span class="my-value">[[_c_lesinfo.laatste_lesdatum_lokaal]]</span>
+      </div>
+      <div class="my-input">
+        <!-- type="date" toont een datum picker en een inputveld in lokaal datumformaat.
+             de input en output waarde is echter steeds een string in formaat YYYY-MM-DD
+        -->
+        <paper-input label="(test)Systeem datum " autofocus type="date" value="{{systeemdatumstandaard}}"></paper-input>
+      </div>
+      <div class="my-line">
+        <span class="my-label">ingevoerde waarde</span>
+        <span class="my-label2">:</span>
+        <span class="my-value">[[systeemdatumstandaard]] (standaarddatumformaat)</span>
+      </div>
+      <div class="my-line">
+        <span class="my-label">ingevoerde waarde</span>
+        <span class="my-label2">:</span>
+        <span class="my-value">[[systeemdatumlokaal]] (lokaaldatumformaat)</span>
+      </div>
+    </div>
+
+    <iron-ajax
+      id="ajax_lesinfo"
+      method="POST"
+      url="/systeemdatum/lesinfo"
+      handle-as="json"
+      on-response="_ophalen_lesinfo_response_handler">
+    </iron-ajax>
+
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      /* _xxxx private              : geen external data binding      - geen notify
+         _c_xx private constant     : geen external binding, constant - geen notify
+         c_xx  public constant      : one way external databinding [[c_xx]] - geen notify nodig
+         xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+      */
+      Polymer({
+        is: 'my-systeemdatum',
+
+        properties: {
+          _c_lesinfo: {
+            type: Object,                    /* <LesInfo> zijnde: eerste_lesdatum_lokaal, laatste_lesdatum_lokaal] */
+          },
+          c_visible: {
+            type: Boolean,                                     /* true when element is the active visible item */
+            value: false,
+            observer: '_ophalen_lesinfo_request_handler',     /* wordt ook aangeroepen bijwisseling van true naar false.
+                                                               regel in de functie dat er niets gebeurd
+                                                               als c_visible false is */
+          },
+          systeemdatumlokaal: {
+            type: String,
+            computed: "_standaarddatumstring_to_lokaledatumstring(systeemdatumstandaard)",
+            notify: true,
+          },
+          systeemdatumstandaard: {
+            type: Date,                                         /* dit is een string in YYYY-MM-DD formaat
+                                                               ook als de regional settings anders aangeven*/
+            notify: true,
+          },
+        },
+
+        _ophalen_lesinfo_request_handler: function() {
+          if (this.c_visible) {    /* zodra zichtbaar geworden haal info op van server */
+            console.log("_ophalen_lesinfo_request_handler");
+            this.$.ajax_lesinfo.contentType="application/json";
+            this.$.ajax_lesinfo.body={
+            };
+            this.$.ajax_lesinfo.generateRequest();
+          }
+        },
+
+        _ophalen_lesinfo_response_handler: function(request) {
+          console.log("_ophalen_lesinfo_response_handler: "+
+            request.detail.response.eerste_lesdatum + " tot " +
+            request.detail.response.laatste_lesdatum);
+          var lApp = document.querySelector('my-app');
+          this._c_lesinfo = {
+            "eerste_lesdatum_lokaal":
+            	lApp.standaarddatumstring_to_lokaledatumstring(request.detail.response.eerste_lesdatum),
+            "laatste_lesdatum_lokaal":
+            	lApp.standaarddatumstring_to_lokaledatumstring(request.detail.response.laatste_lesdatum)
+          };
+        },
+
+        _standaarddatumstring_to_lokaledatumstring(pStandaardDatum) {
+         	var lApp = document.querySelector('my-app');
+         	return lApp.standaarddatumstring_to_lokaledatumstring(pStandaardDatum);
+        }
+      });
+    })();
+  </script>
+</dom-module>
