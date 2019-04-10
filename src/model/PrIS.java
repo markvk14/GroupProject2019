@@ -1,8 +1,10 @@
 package model;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,8 +23,8 @@ public class PrIS {
 	private ArrayList<Student> deStudenten;
 	private ArrayList<Klas> deKlassen;
 	private ArrayList<les> deLessen;
-	private String huidigeGebruiker = new String();
-	private String huidigeRol = new String();
+	private Student huidigeStudent;
+	private Docent huidigeDocent;
 
 	/**
 	 * De constructor maakt een set met standaard-data aan. Deze data moet nog
@@ -113,10 +115,7 @@ public class PrIS {
 		for (Docent d : deDocenten) {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (d.komtWachtwoordOvereen(wachtwoord)) {
-					String[] s = gebruikersnaam.split("@");
-					String[] f = s[0].split("\\.");
-					huidigeGebruiker = f[0] + " " + f[1];
-					huidigeRol = "docent";
+					huidigeDocent = d;
 					isIngelogd = true;
 					return "docent ingelogd";
 				}
@@ -127,11 +126,8 @@ public class PrIS {
 		for (Student s : deStudenten) {
 			if (s.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (s.komtWachtwoordOvereen(wachtwoord)) {
-					String[] q = gebruikersnaam.split("@");
-					String[] r = q[0].split("\\.");
-					huidigeGebruiker = r[0] + " " + r[1];
-					huidigeRol = "student";
-					isIngelogd = true;
+					huidigeStudent = s;
+					saveLessen();
 					return "student ingelogd";
 				}
 				return "fout wachtwoord";
@@ -140,6 +136,26 @@ public class PrIS {
 		return "gebruikersnaam niet gevonden";
 	}
 	
+	public void saveLessen() {
+		
+		try {
+		File writeFile = new File("lessen.csv");
+		writeFile.delete();
+		FileWriter writer = new FileWriter(writeFile);
+		for (les l : huidigeStudent.getLessen()) {
+			String[] lesInfo = l.returnLes();
+			for (String info : lesInfo) {
+				writer.write(info + ", ");
+			}
+			writer.write("\n");
+		}
+		writer.close();
+		}
+		catch(IOException e) { 
+			e.printStackTrace();
+		}
+		
+	}
 	private String passwordChange(String wachtwoord, String nieuwWachtwoord, String herhaalNieuwWachtwoord) {
 		int charCount = 0;
 		int numCount = 0;
@@ -265,6 +281,7 @@ public class PrIS {
 					int lStudentNr = Integer.parseInt(lStudentNrString);
 					// Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
 					lStudent = new Student(element[3], element[2], element[1], wachtwoord , gebruikersnaam, lStudentNr);
+					lStudent.setGroepId(k.getKlasCode());
 					pStudenten.add(lStudent);
 					k.voegStudentToe(lStudent);
 				}
@@ -340,6 +357,6 @@ public class PrIS {
 		ArrayList<les> List = vulLessen(deLessen);
 		return List;
 	}
-	public String returnGebruiker() { return huidigeGebruiker;}
-	public String returnRol() { return huidigeRol;}
+	public Student returnHuidigeStudent() { return huidigeStudent;	}
+
 }

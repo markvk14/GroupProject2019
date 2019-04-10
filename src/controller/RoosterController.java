@@ -29,8 +29,7 @@ public class RoosterController implements Handler {
 	@SuppressWarnings("null")
 	private void ophalenKlas(Conversation conversation) {
 		PrIS infoSysteem = new PrIS();
-		Student huidigeStudent = infoSysteem.getStudent(infoSysteem.returnGebruiker());
-		ArrayList<les> pLessen = huidigeStudent.getLessen();
+		ArrayList<les> pLessen = infoSysteem.returnHuidigeStudent().getLessen();
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 		JsonObjectBuilder lJsonObjectBuilderVoorLes = Json.createObjectBuilder();
 		for (les lles : pLessen) {									        // met daarin voor elke medestudent een JSON-object... 																			// behalve de student zelf...

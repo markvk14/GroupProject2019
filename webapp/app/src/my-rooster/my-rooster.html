@@ -49,12 +49,13 @@
                 </table>
                 </thread>
          </vaadin-grid>
-         <iron-ajax auto
-            method="POST"
-            url="/rooster/ophalen/klas"
-            handle-as"json"
-            on-response="handleResponse">
-        </iron-ajax>
+         <iron-ajax
+     	      id="ajax_rooster_ophalen_klas"
+     	      method="POST"
+     	      url="/rooster/ophalen/klas"
+     	      handle-as="json"
+     	      on-response="_rooster_ophalen_docent_response_handler">
+     	    </iron-ajax>
         </template>
 
 
