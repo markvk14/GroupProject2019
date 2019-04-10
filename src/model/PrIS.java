@@ -21,6 +21,8 @@ public class PrIS {
 	private ArrayList<Student> deStudenten;
 	private ArrayList<Klas> deKlassen;
 	private ArrayList<les> deLessen;
+	private String huidigeGebruiker = new String();
+	private String huidigeRol = new String();
 
 	/**
 	 * De constructor maakt een set met standaard-data aan. Deze data moet nog
@@ -111,6 +113,10 @@ public class PrIS {
 		for (Docent d : deDocenten) {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (d.komtWachtwoordOvereen(wachtwoord)) {
+					String[] s = gebruikersnaam.split("@");
+					String[] f = s[0].split("\\.");
+					huidigeGebruiker = f[0] + " " + f[1];
+					huidigeRol = "docent";
 					isIngelogd = true;
 					return "docent ingelogd";
 				}
@@ -121,15 +127,17 @@ public class PrIS {
 		for (Student s : deStudenten) {
 			if (s.getGebruikersnaam().equals(gebruikersnaam)) {
 				if (s.komtWachtwoordOvereen(wachtwoord)) {
+					String[] q = gebruikersnaam.split("@");
+					String[] r = q[0].split("\\.");
+					huidigeGebruiker = r[0] + " " + r[1];
+					huidigeRol = "student";
 					isIngelogd = true;
 					return "student ingelogd";
 				}
 				return "fout wachtwoord";
 			}
-			return "gebruikersnaam niet gevonden";
 		}
-
-		return "als je deze error ziet is er iets flink mis";
+		return "gebruikersnaam niet gevonden";
 	}
 	
 	private String passwordChange(String wachtwoord, String nieuwWachtwoord, String herhaalNieuwWachtwoord) {
@@ -332,4 +340,6 @@ public class PrIS {
 		ArrayList<les> List = vulLessen(deLessen);
 		return List;
 	}
+	public String returnGebruiker() { return huidigeGebruiker;}
+	public String returnRol() { return huidigeRol;}
 }

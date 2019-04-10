@@ -7,6 +7,9 @@
     <script src="../../bower_components/webcomponentsjs/webcomponents.js"></script>
     <link rel="import"href="../../bower_components/vaadin-grid/vaadin-grid.html">
     <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+    <script type="module">
+      import '@polymer/iron-ajax/iron-ajax.js';
+    </script>
 </head>
 
 <body>
@@ -40,18 +43,17 @@
                         <th>locatie</th>
                         <th>klas</th>
                         <th verborgen$="[[_are_strings_equal(r_rol, 'student')]]"><paper-icon-button verborgen%="[[_are_strings_equal(r_rol, 'student')]]" id="presentie" icon="social" on-click="presentie"></th>
-                        <th verborgen$="[[_are_strings_equal(r_rol, 'student')]]"><paper-icon-button verborgen%="[[_are_strings_equal(r_rol, 'undifined')]]" id="afmeldenknop" icon="social" on-click="afmeldenknop"></th>
+                        <th verborgen$="[[_are_strings_equal(r_rol, 'student')]]"><paper-icon-button verborgen%="[[_are_strings_equal(r_rol, 'undefined')]]" id="afmeldenknop" icon="social" on-click="afmeldenknop"></th>
                     </tr>
                 </template>
                 </table>
                 </thread>
          </vaadin-grid>
-         <iron-ajax>
-            id=""
+         <iron-ajax auto
             method="POST"
-            url=""
+            url="/rooster/ophalen/klas"
             handle-as"json"
-            on-response=""
+            on-response="handleResponse">
         </iron-ajax>
         </template>
 
