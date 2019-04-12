@@ -114,7 +114,7 @@ public class PrIS {
 	public String login(String gebruikersnaam, String wachtwoord) {
 		for (Docent d : deDocenten) {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
-				if (d.komtWachtwoordOvereen(wachtwoord)) {
+				if (d.getWachtwoord() == "geheim") {
 					huidigeDocent = d;
 					isIngelogd = true;
 					return "docent ingelogd";
@@ -125,7 +125,7 @@ public class PrIS {
 
 		for (Student s : deStudenten) {
 			if (s.getGebruikersnaam().equals(gebruikersnaam)) {
-				if (s.komtWachtwoordOvereen(wachtwoord)) {
+				if (s.getWachtwoord() == "geheim") {
 					huidigeStudent = s;
 					saveLessen();
 					return "student ingelogd";
@@ -156,33 +156,7 @@ public class PrIS {
 		}
 		
 	}
-	private String passwordChange(String wachtwoord, String nieuwWachtwoord, String herhaalNieuwWachtwoord) {
-		int charCount = 0;
-		int numCount = 0;
-		for (Student s : deStudenten) {
-			if (isIngelogd == true){
-				if (s.komtWachtwoordOvereen(wachtwoord)) {
-					System.out.println("wachtwoord komt overeen");
-					if (nieuwWachtwoord == herhaalNieuwWachtwoord) {
-						return "wachtwoorden zijn niet gelijk!";
-					}
-					
-					for (int i = 0; i < nieuwWachtwoord.length(); i++) {
-						char ch = nieuwWachtwoord.charAt(i);
-						
-			            if (is_Numeric(ch)) numCount++;
-			            	else if (is_Letter(ch)) charCount++;
-			            		else return "gebruik alleen cijfers en letters!";
-						}
-								if (nieuwWachtwoord.length() < wachtwoordLengte) {
-										return "wachtwoord is te kort";
-					}
-				}
-			}else return "log eerst in!";
-				
-			}
-		return null;
-	}
+
 	
 	public static boolean is_Letter(char ch) {
         ch = Character.toUpperCase(ch);

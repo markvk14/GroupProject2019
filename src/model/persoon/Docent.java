@@ -17,5 +17,4 @@ public class Docent extends Persoon {
 	public void setDocentNummer(int docentNummer) {
 		this.docentNummer = docentNummer;
 	}
-
 }
